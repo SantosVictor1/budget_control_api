@@ -1,8 +1,10 @@
 package com.budget.api.controller
 
 import com.budget.api.model.User
-import com.budget.api.repository.UserRepository
+import com.budget.api.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DuplicateKeyException
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -11,24 +13,37 @@ import org.springframework.web.bind.annotation.*
 class ApiController {
 
     @Autowired
-    private var userRepository: UserRepository? = null;
+    private lateinit var userService: UserService
 
     @PostMapping("/users")
-    fun createUser(@RequestBody user: User): String {
-        var currentUser: User = User();
+    fun createUser(@RequestBody user: User): ResponseEntity<String> {
+        var currentUser: User = User()
 
-        currentUser.email = user.email;
-        currentUser.name = user.name;
-        currentUser.cpf = user.cpf;
-        currentUser.password = user.password;
-        userRepository?.save(currentUser);
+        try {
+            currentUser.email = user.email
+            currentUser.name = user.name
+            currentUser.cpf = user.cpf
+            currentUser.password = user.password
 
-        return "Criado com sucesso";
+            if (userService.existsByIdAndEmailOrCpf(currentUser.email, currentUser.cpf)) {
+                throw Exception("Email ou cpf ja cadastrados!", Throwable())
+            }
+
+            userService.save(currentUser)
+        } catch (e: Exception) {
+            if (e.toString().contains("tamanho deve estar", ignoreCase = true)) {
+                return ResponseEntity.badRequest().body("Senha deve ter no mínimo 8 caracteres")
+            }
+
+            return ResponseEntity.badRequest().body(e.toString())
+        }
+
+        return ResponseEntity.ok("Criado com sucesso")
     }
 
-    @GetMapping("/users")
-    @ResponseBody
-    fun request(): MutableList<User>? {
-        return userRepository?.findAll();
-    }
+//    @GetMapping("/users")
+//    @ResponseBody
+//    fun request(): MutableList<User>? {
+//        return userRepository.findAll()
+//    }
 }

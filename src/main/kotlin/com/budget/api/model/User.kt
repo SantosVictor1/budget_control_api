@@ -1,6 +1,7 @@
 package com.budget.api.model
 
 import javax.persistence.*
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
@@ -22,6 +23,7 @@ class User {
 
     @NotBlank
     @Column(name = "email", unique = true)
+    @Email(message = "Email inválido")
     var email: String? = null;
 
     @NotBlank

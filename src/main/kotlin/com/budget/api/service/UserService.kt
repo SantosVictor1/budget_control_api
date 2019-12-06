@@ -2,8 +2,10 @@ package com.budget.api.service
 
 import com.budget.api.model.User
 import com.budget.api.repository.UserRepository
+import com.budget.api.request.UserRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserService {
@@ -26,8 +28,8 @@ class UserService {
         return userRepository.findAll()
     }
 
-    fun getById(id: Long): User {
-        return userRepository.getOne(id)
+    fun getById(id: Long): Optional<User> {
+        return userRepository.findById(id)
     }
 
     fun deleteById(id: Long) {

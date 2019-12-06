@@ -1,17 +1,17 @@
 package com.budget.api.controller
 
 import com.budget.api.model.User
-import com.budget.api.response.Response
+import com.budget.api.request.UserRequest
 import com.budget.api.response.error.ErrorResponse
 import com.budget.api.response.success.UserResponse
 import com.budget.api.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DuplicateKeyException
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,6 +22,11 @@ class UserController {
     private lateinit var userService: UserService
 
     fun validateFields(user: User, bindingResult: BindingResult) {
+        if (user.name?.isEmpty()!!) {
+            bindingResult.addError(ObjectError("Nome", "Nome obrigatório"))
+            return
+        }
+
         if (user.cpf?.isEmpty()!! || user.cpf?.length != 11) {
             bindingResult.addError(ObjectError("CPF", "CPF inválido"))
             return
@@ -49,7 +54,7 @@ class UserController {
     }
 
     @PostMapping("/users")
-    fun createUser(@RequestBody user: User, bindingResult: BindingResult): ResponseEntity<Response> {
+    fun createUser(@RequestBody user: User, bindingResult: BindingResult): ResponseEntity<Any> {
         var userResponse: UserResponse
         var errorResponse: ErrorResponse
 
@@ -69,32 +74,45 @@ class UserController {
     }
 
     @GetMapping("/users")
-    @ResponseBody
-    fun request(): ResponseEntity<MutableList<UserResponse>> {
+    fun getAllUsers(): ResponseEntity<MutableList<UserResponse>> {
         var userResponseList: MutableList<UserResponse> = mutableListOf<UserResponse>()
         val response = userService.getAll()
 
         response.forEach { user ->
-            var user = UserResponse(user.id, user.name, user.email, user.cpf)
-            userResponseList.add(user)
+            var userResponse = UserResponse(user.id, user.name, user.email, user.cpf)
+            userResponseList.add(userResponse)
         }
         return ResponseEntity.ok(userResponseList)
     }
 
     @GetMapping("users/{id}")
-    @ResponseBody
-    fun getById(@PathVariable id: Long): ResponseEntity<UserResponse> {
-        val user: User = userService.getById(id)
-        var userResponse: UserResponse = UserResponse(user.id, user.name, user.email, user.cpf)
+    fun getById(@PathVariable id: Long): ResponseEntity<Any> {
+        val user: Optional<User> = userService.getById(id)
+        lateinit var userResponse: UserResponse
+        lateinit var errorResponse: ErrorResponse
 
-        return ResponseEntity.ok(userResponse)
+        if (!user.isPresent) {
+            errorResponse = ErrorResponse(404, "Usuário não encontrado")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
+        }
+
+        user.let {
+            userResponse = UserResponse(it.get().id, it.get().name, it.get().email, it.get().cpf)
+        }
+
+        return ResponseEntity.ok().body(userResponse)
     }
 
     @DeleteMapping("/users/{id}")
-    @ResponseBody
-    fun deleteById(@PathVariable id: Long): ResponseEntity<String> {
-        userService.deleteById(id)
+    fun deleteById(@PathVariable id: Long): ResponseEntity<Any> {
+        val user: Optional<User> = userService.getById(id)
+        var errorResponse: ErrorResponse = ErrorResponse(404, "Usuário não encontrado")
 
-        return ResponseEntity.ok("Usuário deletado com sucesso")
+        if (user.isPresent) {
+            userService.deleteById(id)
+            return ResponseEntity.noContent().build()
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
     }
 }

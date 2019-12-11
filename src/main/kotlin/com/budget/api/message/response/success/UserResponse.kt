@@ -1,4 +1,4 @@
-package com.budget.api.response.success
+package com.budget.api.message.response.success
 
 class UserResponse(
         val id: Long?,

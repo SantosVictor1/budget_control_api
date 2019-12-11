@@ -1,10 +1,12 @@
 package com.budget.api.controller
 
 import com.budget.api.model.User
-import com.budget.api.request.UserRequest
-import com.budget.api.response.error.ErrorResponse
-import com.budget.api.response.success.UserResponse
+import com.budget.api.message.response.error.ErrorResponse
+import com.budget.api.message.response.success.UserResponse
 import com.budget.api.service.UserService
+import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -53,6 +55,14 @@ class UserController {
         }
     }
 
+    @ApiOperation(value = "Cadastra um usuário")
+    @ApiResponses(
+        ApiResponse(code = 200, message = "Cadastro realizado com sucesso", response = UserResponse::class),
+        ApiResponse(code = 400, message = "Verifique os dados", response = ErrorResponse::class),
+        ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
+        ApiResponse(code = 404, message = "Servidor não encontrado", response = ErrorResponse::class),
+        ApiResponse(code = 500, message = "Houve um erro interno do servidor", response = ErrorResponse::class)
+    )
     @PostMapping("/users")
     fun createUser(@RequestBody user: User, bindingResult: BindingResult): ResponseEntity<Any> {
         var userResponse: UserResponse

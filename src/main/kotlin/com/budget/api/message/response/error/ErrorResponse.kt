@@ -1,4 +1,4 @@
-package com.budget.api.response.error
+package com.budget.api.message.response.error
 
 class ErrorResponse(
         val statusCode: Int,

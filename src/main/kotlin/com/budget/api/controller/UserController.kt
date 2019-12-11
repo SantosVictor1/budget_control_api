@@ -2,6 +2,7 @@ package com.budget.api.controller
 
 import com.budget.api.model.User
 import com.budget.api.message.response.error.ErrorResponse
+import com.budget.api.message.response.success.SuccessResponse
 import com.budget.api.message.response.success.UserResponse
 import com.budget.api.service.UserService
 import io.swagger.annotations.ApiOperation
@@ -83,6 +84,13 @@ class UserController {
         return ResponseEntity.ok(userResponse)
     }
 
+    @ApiOperation(value = "Retorna todos os usuários")
+    @ApiResponses(
+        ApiResponse(code = 200, message = "Usuários retornados com sucesso", response = UserResponse::class, responseContainer = "List"),
+        ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
+        ApiResponse(code = 404, message = "Servidor não encontrado", response = ErrorResponse::class),
+        ApiResponse(code = 500, message = "Houve um erro interno do servidor", response = ErrorResponse::class)
+    )
     @GetMapping("/users")
     fun getAllUsers(): ResponseEntity<MutableList<UserResponse>> {
         var userResponseList: MutableList<UserResponse> = mutableListOf<UserResponse>()
@@ -95,6 +103,13 @@ class UserController {
         return ResponseEntity.ok(userResponseList)
     }
 
+    @ApiOperation(value = "Retorna o usuário pelo Id")
+    @ApiResponses(
+        ApiResponse(code = 200, message = "Usuário retornado com sucesso", response = UserResponse::class),
+        ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
+        ApiResponse(code = 404, message = "Servidor não encontrado", response = ErrorResponse::class),
+        ApiResponse(code = 500, message = "Houve um erro interno do servidor", response = ErrorResponse::class)
+    )
     @GetMapping("users/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<Any> {
         val user: Optional<User> = userService.getById(id)
@@ -113,14 +128,22 @@ class UserController {
         return ResponseEntity.ok().body(userResponse)
     }
 
+    @ApiOperation(value = "Deleta o usuário pelo Id")
+    @ApiResponses(
+        ApiResponse(code = 204, message = "Usuário deletado com sucesso", response = SuccessResponse::class),
+        ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
+        ApiResponse(code = 404, message = "Servidor não encontrado", response = ErrorResponse::class),
+        ApiResponse(code = 500, message = "Houve um erro interno do servidor", response = ErrorResponse::class)
+    )
     @DeleteMapping("/users/{id}")
     fun deleteById(@PathVariable id: Long): ResponseEntity<Any> {
         val user: Optional<User> = userService.getById(id)
         var errorResponse: ErrorResponse = ErrorResponse(404, "Usuário não encontrado")
+        val successResponse: SuccessResponse = SuccessResponse("Usuário deletado com sucesso!", 204)
 
         if (user.isPresent) {
             userService.deleteById(id)
-            return ResponseEntity.noContent().build()
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(successResponse)
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)

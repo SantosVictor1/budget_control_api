@@ -16,7 +16,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
-import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +28,7 @@ class UserController {
     private lateinit var userService: UserService
     private lateinit var errorResponse: ErrorResponse
     private lateinit var userResponse: UserResponse
+    private var regex: String = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     @ApiOperation(value = "Cadastra um usuário")
     @ApiResponses(
@@ -61,16 +63,17 @@ class UserController {
         ApiResponse(code = 400, message = "Senha deve ter mais que 8 caracteres", response = ErrorResponse::class),
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ErrorResponse::class)
     )
-    @PutMapping("/users/{id}")
+    @PatchMapping("/users/{id}")
     fun updateUser(
         @RequestBody passwordRequest: PasswordRequest,
         bindingResult: BindingResult,
         @PathVariable id: Long
     ): ResponseEntity<Any> {
+        lateinit var user: User
         var successResponse: SuccessResponse = SuccessResponse("Senha alterada com sucesso!", 200)
 
         if (getUser(id)) {
-            var user: User = userService.getById(id).get()
+            user = userService.getById(id).get()
             user.password = passwordRequest.password
             validateFields(user, bindingResult)
 
@@ -114,8 +117,6 @@ class UserController {
     )
     @GetMapping("users/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<Any> {
-        val user: Optional<User> = userService.getById(id)
-
         if (!getUser(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
         }
@@ -135,7 +136,7 @@ class UserController {
 
         if (getUser(id)) {
             userService.deleteById(id)
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(successResponse)
+            return ResponseEntity.ok().body(successResponse)
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
@@ -164,6 +165,9 @@ class UserController {
     }
 
     private fun validatePostFields(user: User, bindingResult: BindingResult) {
+        var pattern: Pattern = Pattern.compile(regex)
+        var matcher: Matcher = pattern.matcher(user.email)
+
         if (user.name?.isEmpty()!!) {
             bindingResult.addError(ObjectError("Nome", "Nome obrigatório"))
             return
@@ -176,6 +180,11 @@ class UserController {
 
         if (user.email?.isEmpty() !!) {
             bindingResult.addError(ObjectError("Email", "Email obrigatório"))
+            return
+        }
+
+        if (!matcher.matches()) {
+            bindingResult.addError(ObjectError("Email", "Email inválido"))
             return
         }
 

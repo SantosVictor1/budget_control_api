@@ -36,7 +36,7 @@ class UserController {
         var userResponse: UserResponse
 
         val userSaved =  userService.createUser(userRequest)
-        userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf)
+        userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf, userSaved.income)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse)
     }
@@ -71,7 +71,7 @@ class UserController {
         val response = userService.getAll()
 
         response.forEach { user ->
-            var userResponse = UserResponse(user.id, user.name, user.email, user.cpf)
+            var userResponse = UserResponse(user.id, user.name, user.email, user.cpf, user.income)
             userResponseList.add(userResponse)
         }
         return ResponseEntity.ok().body(userResponseList)
@@ -89,7 +89,7 @@ class UserController {
         lateinit var userResponse: UserResponse
 
         user.let {
-            userResponse = UserResponse(it.id, it.name, it.email, it.cpf)
+            userResponse = UserResponse(it.id, it.name, it.email, it.cpf, it.income)
         }
 
         return ResponseEntity.ok().body(userResponse)

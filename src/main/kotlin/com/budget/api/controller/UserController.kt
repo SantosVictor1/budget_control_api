@@ -13,11 +13,8 @@ import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
-import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api")
@@ -26,9 +23,6 @@ class UserController {
 
     @Autowired
     private lateinit var userService: UserService
-    private lateinit var errorResponse: ErrorResponse
-    private lateinit var userResponse: UserResponse
-    private var regex: String = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     @ApiOperation(value = "Cadastra um usuário")
     @ApiResponses(
@@ -38,19 +32,10 @@ class UserController {
         ApiResponse(code = 404, message = "Servidor não encontrado")
     )
     @PostMapping("/users")
-    fun createUser(@RequestBody userRequest: UserRequest, bindingResult: BindingResult): ResponseEntity<Any> {
+    fun createUser(@RequestBody @Valid  userRequest: UserRequest): ResponseEntity<Any> {
         var userResponse: UserResponse
-        val user: User = setUser(userRequest)
 
-        validatePostFields(user, bindingResult)
-
-        if (bindingResult.hasErrors()) {
-            val error = bindingResult.allErrors[0].defaultMessage
-
-            return ResponseEntity.badRequest().body(setErrorMessage(error!!, 400))
-        }
-
-        val userSaved =  userService.save(user)
+        val userSaved =  userService.createUser(userRequest)
         userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse)
@@ -64,29 +49,12 @@ class UserController {
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ErrorResponse::class)
     )
     @PatchMapping("/users/{id}")
-    fun updateUser(
-        @RequestBody passwordRequest: PasswordRequest,
-        bindingResult: BindingResult,
-        @PathVariable id: Long
-    ): ResponseEntity<Any> {
-        lateinit var user: User
+    fun updatePassword(@RequestBody passwordRequest: PasswordRequest, @PathVariable id: Long): ResponseEntity<Any> {
+        var user: User = userService.getById(id).get()
         var successResponse: SuccessResponse = SuccessResponse("Senha alterada com sucesso!", 200)
 
-        if (getUser(id)) {
-            user = userService.getById(id).get()
-            user.password = passwordRequest.password
-            validateFields(user, bindingResult)
-
-            if (bindingResult.hasErrors()) {
-                val error = bindingResult.allErrors[0].defaultMessage
-
-                return ResponseEntity.badRequest().body(setErrorMessage(error!!, 400))
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
-        }
-
-        userService.save(user)
+        user.password = passwordRequest.password
+        userService.updateUser(user)
 
         return ResponseEntity.ok().body(successResponse)
     }
@@ -117,8 +85,11 @@ class UserController {
     )
     @GetMapping("users/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<Any> {
-        if (!getUser(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
+        val user = userService.getById(id).get()
+        lateinit var userResponse: UserResponse
+
+        user.let {
+            userResponse = UserResponse(it.id, it.name, it.email, it.cpf)
         }
 
         return ResponseEntity.ok().body(userResponse)
@@ -132,93 +103,10 @@ class UserController {
     )
     @DeleteMapping("/users/{id}")
     fun deleteById(@PathVariable id: Long): ResponseEntity<Any> {
-        val successResponse: SuccessResponse = SuccessResponse("Usuário deletado com sucesso!", 204)
+        val successResponse = SuccessResponse("Usuário deletado com sucesso!", 204)
 
-        if (getUser(id)) {
-            userService.deleteById(id)
-            return ResponseEntity.ok().body(successResponse)
-        }
+        userService.getById(id)
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
-    }
-
-    private fun getUser(id: Long): Boolean {
-        val user = userService.getById(id)
-
-        if (!user.isPresent) {
-            errorResponse = ErrorResponse(404, "Usuário não encontrado")
-            return false
-        }
-
-        user.let {
-            userResponse = UserResponse(it.get().id, it.get().name, it.get().email, it.get().cpf)
-        }
-
-        return true
-    }
-
-    private fun validateFields(user: User, bindingResult: BindingResult) {
-        if (user.password?.length!! < 8) {
-            bindingResult.addError((ObjectError("Senha", "Senha deve ser maior que 8 caracteres")))
-            return
-        }
-    }
-
-    private fun validatePostFields(user: User, bindingResult: BindingResult) {
-        var pattern: Pattern = Pattern.compile(regex)
-        var matcher: Matcher = pattern.matcher(user.email)
-
-        if (user.name?.isEmpty()!!) {
-            bindingResult.addError(ObjectError("Nome", "Nome obrigatório"))
-            return
-        }
-
-        if (user.cpf?.isEmpty()!! || user.cpf?.length != 11) {
-            bindingResult.addError(ObjectError("CPF", "CPF inválido"))
-            return
-        }
-
-        if (user.email?.isEmpty() !!) {
-            bindingResult.addError(ObjectError("Email", "Email obrigatório"))
-            return
-        }
-
-        if (!matcher.matches()) {
-            bindingResult.addError(ObjectError("Email", "Email inválido"))
-            return
-        }
-
-        if (userService.existsByCpf(user.cpf)) {
-            bindingResult.addError((ObjectError("Cpf", "CPF já cadastrado")))
-            return
-        }
-
-        if (userService.existsByEmail(user.email)) {
-            bindingResult.addError((ObjectError("Email", "Email já cadastrado")))
-            return
-        }
-
-        validateFields(user, bindingResult)
-    }
-
-    /*
-    *  Método responsável por salvar as variáveis da requisição POST no model
-    *
-    * @params UserRequest
-    *
-    * @return User
-    */
-    private fun setUser(userRequest: UserRequest): User {
-        var user: User = User()
-        user.cpf = userRequest.cpf
-        user.name = userRequest.name
-        user.password = userRequest.password
-        user.email = userRequest.email
-
-        return user
-    }
-
-    private fun setErrorMessage(erroMessage: String, status: Int): ErrorResponse {
-        return ErrorResponse(status, erroMessage)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(successResponse)
     }
 }

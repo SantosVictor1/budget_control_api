@@ -17,14 +17,29 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    /*
+    *  Método responsável por verificar se o cpf já existe
+    *
+    * @params cpf
+    */
     fun existsByCpf(cpf: String): Boolean {
         return userRepository.existsByCpf(cpf)
     }
 
+    /*
+    *  Método responsável por verificar se o email já existe
+    *
+    * @params cpf
+    */
     fun existsByEmail(email: String): Boolean {
         return userRepository.existsByEmail(email)
     }
 
+    /*
+    *  Método responsável por cadastrar o usuário
+    *
+    * @params userRequest
+    */
     fun createUser(userRequest: UserRequest): User {
         val user = setUser(userRequest)
         validatePostFields(user)
@@ -32,16 +47,31 @@ class UserService {
         return userRepository.save(user)
     }
 
+    /*
+    *  Método responsável por atualizar a senha de algum usuário
+    *
+    * @params user
+    */
     fun updateUser(user: User): User {
         validatePassword(user)
 
         return userRepository.save(user)
     }
 
+    /*
+    *  Método responsável por listar todos os usuários cadastrados
+    *
+    * @params cpf
+    */
     fun getAll(): List<User> {
         return userRepository.findAll()
     }
 
+    /*
+    *  Método responsável por listar o usuário pelo Id
+    *
+    * @params id
+    */
     fun getById(id: Long): Optional<User> {
         val user = userRepository.findById(id)
 
@@ -52,6 +82,11 @@ class UserService {
         return user
     }
 
+    /*
+    *  Método responsável por usuário pelo Id
+    *
+    * @params id
+    */
     fun deleteById(id: Long) {
         return userRepository.deleteById(id)
     }
@@ -59,9 +94,9 @@ class UserService {
     /*
     *  Método responsável por atribuir as váriaveis do DTO ao model
     *
-    * @params UserRequest
+    *  @params UserRequest
     *
-    * @return User
+    *  @return User
     */
     private fun setUser(userRequest: UserRequest): User {
         var user: User = User()
@@ -74,12 +109,22 @@ class UserService {
         return user
     }
 
+    /*
+    *  Método responsável por validar a senha no POST e PUT
+    *
+    *  @params User
+    */
     fun validatePassword(user: User) {
         if (user.password?.length!! < 8) {
             throw UserException(400, "Senha deve ser maior que 8 caracteres")
         }
     }
 
+    /*
+   *  Método responsável por validar os campos no POST
+   *
+   *  @params User
+   */
     fun validatePostFields(user: User) {
         var pattern: Pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$")
         var matcher: Matcher = pattern.matcher(user.email)
@@ -96,7 +141,7 @@ class UserService {
             throw UserException(400, "CPF inválido")
         }
 
-        if (user.email?.isEmpty() !!) {
+        if (user.email?.isEmpty()!!) {
             throw UserException(400, "Email obrigatório")
         }
 

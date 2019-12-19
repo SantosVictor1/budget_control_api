@@ -36,7 +36,7 @@ class UserController {
         var userResponse: UserResponse
 
         val userSaved =  userService.createUser(userRequest)
-        userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf, userSaved.income)
+        userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf, userSaved.income, null)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse)
     }
@@ -71,7 +71,7 @@ class UserController {
         val response = userService.getAll()
 
         response.forEach { user ->
-            var userResponse = UserResponse(user.id, user.name, user.email, user.cpf, user.income)
+            var userResponse = UserResponse(user.id, user.name, user.email, user.cpf, user.income, user.spents)
             userResponseList.add(userResponse)
         }
         return ResponseEntity.ok().body(userResponseList)
@@ -89,7 +89,7 @@ class UserController {
         lateinit var userResponse: UserResponse
 
         user.let {
-            userResponse = UserResponse(it.id, it.name, it.email, it.cpf, it.income)
+            userResponse = UserResponse(it.id, it.name, it.email, it.cpf, it.income, it.spents)
         }
 
         return ResponseEntity.ok().body(userResponse)
@@ -103,10 +103,8 @@ class UserController {
     )
     @DeleteMapping("/users/{id}")
     fun deleteById(@PathVariable id: Long): ResponseEntity<Any> {
-        val successResponse = SuccessResponse("Usuário deletado com sucesso!", 204)
+        userService.deleteById(id)
 
-        userService.getById(id)
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(successResponse)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

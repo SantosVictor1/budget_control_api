@@ -6,7 +6,6 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
-import kotlin.math.min
 
 @Entity
 @Table(name = "users")
@@ -39,4 +38,7 @@ class User {
     @NotNull(message = "Renda obrigatória")
     @Column(name = "income")
     var income: Double? = null
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
+    var spents: List<Spent>? = null
 }

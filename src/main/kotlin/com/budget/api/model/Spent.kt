@@ -1,10 +1,10 @@
 package com.budget.api.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -19,16 +19,16 @@ class Spent {
     @Column(name = "value")
     var spentValue: Double? = null
 
-//    @NotEmpty(message = "Data obrigatória")
-//    @JsonFormat(pattern = "dd/MM/yyyy")
-//    @Column(name = "spentDate")
-//    var spentDate: Date? = null
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @Column(name = "spentDate")
+    var spentDate: Date? = null
 
     @NotBlank(message = "Local obrigatório")
-    @Column(name = "spentPlace")
-    var spentPlace: String? = null
+    @Column(name = "description")
+    var descritpion: String? = null
 
     @ManyToOne(targetEntity = User::class)
     @JoinColumn(name = "userId", nullable = false)
+    @JsonIgnore
     var user: User? = null
 }

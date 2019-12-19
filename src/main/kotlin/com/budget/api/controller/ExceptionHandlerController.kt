@@ -1,7 +1,7 @@
 package com.budget.api.controller
 
 import com.budget.api.message.response.error.ErrorResponse
-import com.budget.api.service.exception.UserException
+import com.budget.api.service.exception.BudgetException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -14,8 +14,8 @@ class ExceptionHandlerController {
 
     private lateinit var errorResponse: ErrorResponse
 
-    @ExceptionHandler(UserException::class)
-    fun validation(e: UserException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(BudgetException::class)
+    fun validation(e: BudgetException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         errorResponse = ErrorResponse(e.status, e.errorMessage)
 
         return ResponseEntity.status(errorResponse.statusCode).body(errorResponse)
@@ -27,6 +27,6 @@ class ExceptionHandlerController {
             errorResponse = ErrorResponse(400, "CPF inválido")
         }
 
-        return ResponseEntity.status(errorResponse.statusCode).body(errorResponse);
+        return ResponseEntity.status(errorResponse.statusCode).body(errorResponse)
     }
 }

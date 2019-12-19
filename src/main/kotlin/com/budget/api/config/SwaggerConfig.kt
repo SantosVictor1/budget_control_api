@@ -31,6 +31,6 @@ class SwaggerConfig {
             .description("Aplicação feita com Spring Boot utilizando a linguagem Kotlin")
             .version("1.0")
             .contact(Contact("Victor Santos", "", "victor.udi10@hotmail.com"))
-            .build();
+            .build()
     }
 }

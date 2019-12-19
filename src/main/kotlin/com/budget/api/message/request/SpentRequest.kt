@@ -1,7 +1,6 @@
 package com.budget.api.message.request
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull

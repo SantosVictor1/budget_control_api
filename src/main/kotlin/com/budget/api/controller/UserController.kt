@@ -2,10 +2,10 @@ package com.budget.api.controller
 
 import com.budget.api.message.request.PasswordRequest
 import com.budget.api.message.request.UserRequest
-import com.budget.api.model.User
 import com.budget.api.message.response.error.ErrorResponse
 import com.budget.api.message.response.success.SuccessResponse
 import com.budget.api.message.response.success.UserResponse
+import com.budget.api.model.User
 import com.budget.api.service.UserService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

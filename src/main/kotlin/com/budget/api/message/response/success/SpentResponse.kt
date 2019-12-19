@@ -1,7 +1,6 @@
 package com.budget.api.message.response.success
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 
 class SpentResponse(

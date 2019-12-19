@@ -2,7 +2,6 @@ package com.budget.api.service
 
 import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.success.SpentResponse
-import com.budget.api.message.response.success.UserResponse
 import com.budget.api.model.Spent
 import com.budget.api.model.User
 import com.budget.api.repository.SpentRepository

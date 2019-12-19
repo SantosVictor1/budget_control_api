@@ -2,16 +2,12 @@ package com.budget.api.controller
 
 import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.success.SpentResponse
-import com.budget.api.message.response.success.SuccessResponse
-import com.budget.api.model.Spent
-import com.budget.api.model.User
 import com.budget.api.service.SpentService
 import com.budget.api.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api")

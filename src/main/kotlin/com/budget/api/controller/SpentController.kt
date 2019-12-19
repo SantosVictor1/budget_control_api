@@ -16,17 +16,9 @@ class SpentController {
     @Autowired
     private lateinit var spentService: SpentService
 
-    @Autowired
-    private lateinit var userService: UserService
-
     @PostMapping("/spents")
     fun newSpent(@RequestBody spentRequest: SpentRequest): ResponseEntity<SpentResponse> {
-        var spentResponse: SpentResponse
-
-        val spentSaved = spentService.saveSpent(spentRequest)
-        spentResponse = SpentResponse(spentSaved.spentValue, spentSaved.spentDate, spentSaved.descritpion, spentSaved.user?.name)
-
-        return ResponseEntity.ok().body(spentResponse)
+        return ResponseEntity.ok().body(spentService.saveSpent(spentRequest))
     }
 
     @GetMapping("/spents")

@@ -18,11 +18,13 @@ class SpentService {
     private lateinit var userRepository: UserRepository
     private lateinit var spentsResponseList: MutableList<SpentResponse>
 
-    fun saveSpent(spentRequest: SpentRequest): Spent {
-        val spent = setSpent(spentRequest)
+    fun saveSpent(spentRequest: SpentRequest): SpentResponse {
+        var spent = setSpent(spentRequest)
         validateFields(spentRequest)
 
-        return spentRepository.save(spent)
+        spent = spentRepository.save(spent)
+
+        return SpentResponse(spent.spentValue, spent.spentDate, spent.descritpion, spent.user?.name)
     }
 
     fun getSpents(): MutableList<SpentResponse> {

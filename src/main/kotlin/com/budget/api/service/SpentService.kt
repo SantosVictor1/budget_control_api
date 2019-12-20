@@ -10,6 +10,9 @@ import com.budget.api.service.exception.BudgetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/**
+ * Created by Victor Santos on 16/12/2019
+ */
 @Service
 class SpentService {
     @Autowired
@@ -18,6 +21,12 @@ class SpentService {
     private lateinit var userRepository: UserRepository
     private lateinit var spentsResponseList: MutableList<SpentResponse>
 
+    /**
+     * Salva gasto de um usuário baseado em seu Id
+     *
+     * @param  spentRequest  DTO de spent
+     * @return  o DTO SpentRequest
+     */
     fun saveSpent(spentRequest: SpentRequest): SpentResponse {
         var spent = setSpent(spentRequest)
         validateFields(spentRequest)
@@ -27,6 +36,11 @@ class SpentService {
         return SpentResponse(spent.spentValue, spent.spentDate, spent.descritpion, spent.user?.name)
     }
 
+    /**
+     * Retorna todos os gastos salvos
+     *
+     * @return MutableList do DTO SpentResponse com os gastos
+     */
     fun getSpents(): MutableList<SpentResponse> {
         spentsResponseList = mutableListOf<SpentResponse>()
         val spentsList: List<Spent> = spentRepository.findAll()
@@ -39,6 +53,12 @@ class SpentService {
         return spentsResponseList
     }
 
+    /**
+     * Retorna todos os gastos de um usuário
+     *
+     * @param  id  Id do usuário para filtrar os gastos
+     * @return MutableList do DTO SpentResponse com os gastos encontrados
+     */
     fun getBydUserId(id: Long): MutableList<SpentResponse> {
         val user = userRepository.findById(id)
 
@@ -57,6 +77,13 @@ class SpentService {
         return spentsResponseList
     }
 
+
+    /**
+     * Retorna um gasto pelo seu Id
+     *
+     * @param  id  Id do gasto a ser encontrado
+     * @return  o DTO SpentResponse do gasto encontrado
+     */
     fun getById(id: Long): SpentResponse {
         val spent = spentRepository.findById(id)
 
@@ -67,6 +94,11 @@ class SpentService {
         return SpentResponse(spent.get().spentValue, spent.get().spentDate, spent.get().descritpion, spent.get().user?.name)
     }
 
+    /**
+     * Deleta um gasto pelo seu Id
+     *
+     * @param  id  Id do gasto a ser deletado
+     */
     fun deleteById(id: Long) {
         val spent = spentRepository.findById(id)
 
@@ -77,6 +109,12 @@ class SpentService {
         spentRepository.deleteById(id)
     }
 
+    /**
+     * Cria um objeto Spent baseado no DTO SpentRequest
+     *
+     * @param  spentRequest  DTO a ser convertido
+     * @return  retorna o objeto Spent criado
+     */
     private fun setSpent(spentRequest: SpentRequest): Spent {
         var spent: Spent = Spent()
         val user: User = userRepository.findById(spentRequest.userId).get()
@@ -89,6 +127,12 @@ class SpentService {
         return spent
     }
 
+
+    /**
+     * Valida os campos enviados para cadastro
+     *
+     * @param  spentRequest  DTO que será validado
+     */
     private fun validateFields(spentRequest: SpentRequest) {
         if (spentRequest.description?.isEmpty()!!) {
             throw BudgetException(400, "Descrição é obrigatória")

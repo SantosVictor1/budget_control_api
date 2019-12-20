@@ -3,9 +3,7 @@ package com.budget.api.controller
 import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.error.ErrorResponse
 import com.budget.api.message.response.success.SpentResponse
-import com.budget.api.message.response.success.UserResponse
 import com.budget.api.service.SpentService
-import com.budget.api.service.UserService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -14,6 +12,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+/**
+ * Created by Victor Santos on 16/12/2019
+ */
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")

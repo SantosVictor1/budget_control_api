@@ -7,6 +7,9 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
+/**
+ * Created by Victor Santos on 16/12/2019
+ */
 @Entity
 @Table(name = "spent")
 class Spent {

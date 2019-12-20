@@ -5,6 +5,9 @@ import java.util.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
+/**
+ * Created by Victor Santos on 16/12/2019
+ */
 class SpentRequest(
     @NotNull(message = "Valor obrigatório")
     val spentValue: Double?,

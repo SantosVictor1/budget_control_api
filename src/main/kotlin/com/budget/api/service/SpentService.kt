@@ -24,7 +24,7 @@ class SpentService {
     /**
      * Salva gasto de um usuário baseado em seu Id
      *
-     * @param  spentRequest  DTO de spent
+     * @param  spentRequest  DTO de Spent
      * @return  o DTO SpentRequest
      */
     fun saveSpent(spentRequest: SpentRequest): SpentResponse {

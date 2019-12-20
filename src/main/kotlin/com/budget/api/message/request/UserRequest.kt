@@ -6,6 +6,9 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+/**
+ * Created by Victor Santos on 06/12/2019
+ */
 class UserRequest(
     @NotBlank(message = "Nome obrigatório")
     @Size(min = 3, max = 80, message = "Nome deve ter mínimo de 3 caracteres e máximo de 80 caracteres")

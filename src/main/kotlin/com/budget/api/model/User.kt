@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+/**
+ * Created by Victor Santos on 24/11/2019
+ */
 @Entity
 @Table(name = "users")
 class User {

@@ -8,23 +8,29 @@ import javax.validation.constraints.Size
 /**
  * Created by Victor Santos on 06/12/2019
  */
-class UserRequest {
+class UserRequest (
+    private val userName: String? = null,
+    private val userEmail: String? = null,
+    private val userCpf: String? = null,
+    private val userPassword: String? = null,
+    private val userIncome: Double? = null
+) {
     @NotNull(message = "Nome obrigatório")
     @Size(min = 3, max = 80, message = "Nome deve ter entre 3 e 80 caracteres")
-    val name: String? = null
+    var name: String? = userName
 
     @NotNull(message = "Email obrigatório")
     @Email(message = "Email inválido")
-    val email: String? = null
+    var email: String? = userEmail
 
     @NotNull(message = "CPF obrigatório")
     @CPF(message = "CPF inválido")
-    val cpf: String? = null
+    var cpf: String? = userCpf
 
     @NotNull(message = "Senha obrigatória")
     @Size(min = 8, message = "Senha deve ser maior que 8 caracteres")
-    val password: String? = null
+    var password: String? = userPassword
 
     @NotNull(message = "Renda obrigatória")
-    val income: Double? = null
+    var income: Double? = userIncome
 }

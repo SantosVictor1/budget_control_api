@@ -4,7 +4,7 @@ import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.error.ErrorResponse
 import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SpentResponse
-import com.budget.api.service.impl.SpentService
+import com.budget.api.service.ISpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -23,7 +23,7 @@ import javax.validation.Valid
 @CrossOrigin("*")
 class SpentController {
     @Autowired
-    private lateinit var spentService: SpentService
+    private lateinit var spentService: ISpentService
 
     @ApiOperation(value = "Salva gasto de um usuário")
     @ApiResponses(

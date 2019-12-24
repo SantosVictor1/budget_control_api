@@ -4,7 +4,7 @@ import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.error.ErrorResponse
 import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SpentResponse
-import com.budget.api.service.SpentService
+import com.budget.api.service.impl.SpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses

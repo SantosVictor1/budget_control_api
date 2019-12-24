@@ -63,7 +63,7 @@ class SpentService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         spentsResponseList = mutableListOf<SpentResponse>()
@@ -88,7 +88,7 @@ class SpentService {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
+            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
         }
 
         return SpentResponse(spent.get().spentValue, spent.get().spentDate, spent.get().descritpion, spent.get().user?.name)
@@ -103,7 +103,7 @@ class SpentService {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
+            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
         }
 
         spentRepository.deleteById(id)
@@ -120,7 +120,7 @@ class SpentService {
         val user = userRepository.findById(spentRequest.userId!!)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         spent.spentDate = spentRequest.spentDate

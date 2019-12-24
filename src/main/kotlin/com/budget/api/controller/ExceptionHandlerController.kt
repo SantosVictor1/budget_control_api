@@ -24,6 +24,10 @@ class ExceptionHandlerController {
      */
     @ExceptionHandler(BudgetException::class)
     fun validation(e: BudgetException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-        return ResponseEntity.status(e.status).body(ErrorResponse(e.status, e.errorsList))
+        var errors = mutableListOf<ErrorSupport>()
+        e.errorsList.forEach {
+            errors.add(ErrorSupport(it))
+        }
+        return ResponseEntity.status(e.status).body(ErrorResponse(e.status, errors))
     }
 }

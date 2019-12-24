@@ -120,9 +120,9 @@ class UserController {
 
     private fun validateResult(bindingResult: BindingResult) {
         if (bindingResult.hasErrors()) {
-            var errorList = mutableListOf<ErrorSupport>()
+            var errorList = mutableListOf<String>()
             bindingResult.allErrors.forEach {
-                errorList.add(ErrorSupport(it.defaultMessage.toString()))
+                errorList.add(it.defaultMessage.toString())
             }
 
             throw BudgetException(400, errorList)

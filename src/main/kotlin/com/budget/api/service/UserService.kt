@@ -67,7 +67,7 @@ class UserService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         return user
@@ -82,7 +82,7 @@ class UserService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         userRepository.deleteById(id)
@@ -113,11 +113,11 @@ class UserService {
      */
     private fun validatePostFields(user: User) {
         if (existsByCpf(user.cpf!!)) {
-            throw BudgetException(400, mutableListOf(ErrorSupport("CPF já cadastrado")))
+            throw BudgetException(400, mutableListOf("CPF já cadastrado"))
         }
 
         if (existsByEmail(user.email!!)) {
-            throw BudgetException(400, mutableListOf(ErrorSupport("Email já cadastrado")))
+            throw BudgetException(400, mutableListOf("Email já cadastrado"))
         }
     }
 

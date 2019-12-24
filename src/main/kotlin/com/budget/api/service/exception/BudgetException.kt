@@ -7,5 +7,5 @@ import com.budget.api.message.response.error.ErrorSupport
  */
 class BudgetException(
     val status: Int,
-    val errorsList: MutableList<ErrorSupport>
+    val errorsList: MutableList<String>
 ) : RuntimeException()

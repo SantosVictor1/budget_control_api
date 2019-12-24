@@ -2,7 +2,6 @@ package com.budget.api.message.request
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.util.*
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 /**

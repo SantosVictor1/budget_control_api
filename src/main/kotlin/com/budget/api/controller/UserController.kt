@@ -3,11 +3,10 @@ package com.budget.api.controller
 import com.budget.api.message.request.PasswordRequest
 import com.budget.api.message.request.UserRequest
 import com.budget.api.message.response.error.ErrorResponse
-import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SuccessResponse
 import com.budget.api.message.response.success.UserResponse
 import com.budget.api.model.User
-import com.budget.api.service.UserService
+import com.budget.api.service.IUserService
 import com.budget.api.service.exception.BudgetException
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -28,7 +27,7 @@ import javax.validation.Valid
 class UserController {
 
     @Autowired
-    private lateinit var userService: UserService
+    private lateinit var userService: IUserService
 
     @ApiOperation(value = "Cadastra um usuário")
     @ApiResponses(
@@ -120,9 +119,9 @@ class UserController {
 
     private fun validateResult(bindingResult: BindingResult) {
         if (bindingResult.hasErrors()) {
-            var errorList = mutableListOf<ErrorSupport>()
+            var errorList = mutableListOf<String>()
             bindingResult.allErrors.forEach {
-                errorList.add(ErrorSupport(it.defaultMessage.toString()))
+                errorList.add(it.defaultMessage.toString())
             }
 
             throw BudgetException(400, errorList)

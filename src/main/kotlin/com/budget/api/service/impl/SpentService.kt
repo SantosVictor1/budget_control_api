@@ -1,12 +1,11 @@
-package com.budget.api.service
+package com.budget.api.service.impl
 
 import com.budget.api.message.request.SpentRequest
-import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SpentResponse
 import com.budget.api.model.Spent
-import com.budget.api.model.User
 import com.budget.api.repository.SpentRepository
 import com.budget.api.repository.UserRepository
+import com.budget.api.service.ISpentService
 import com.budget.api.service.exception.BudgetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -15,20 +14,14 @@ import org.springframework.stereotype.Service
  * Created by Victor Santos on 16/12/2019
  */
 @Service
-class SpentService {
+class SpentService : ISpentService {
     @Autowired
     private lateinit var spentRepository: SpentRepository
     @Autowired
     private lateinit var userRepository: UserRepository
     private lateinit var spentsResponseList: MutableList<SpentResponse>
 
-    /**
-     * Salva gasto de um usuário baseado em seu Id
-     *
-     * @param  spentRequest  DTO de Spent
-     * @return  o DTO SpentRequest
-     */
-    fun saveSpent(spentRequest: SpentRequest): SpentResponse {
+    override fun saveSpent(spentRequest: SpentRequest): SpentResponse {
         var spent = setSpent(spentRequest)
 
         spent = spentRepository.save(spent)
@@ -36,12 +29,7 @@ class SpentService {
         return SpentResponse(spent.spentValue, spent.spentDate, spent.descritpion, spent.user?.name)
     }
 
-    /**
-     * Retorna todos os gastos salvos
-     *
-     * @return MutableList do DTO SpentResponse com os gastos
-     */
-    fun getSpents(): MutableList<SpentResponse> {
+    override fun getSpents(): MutableList<SpentResponse> {
         spentsResponseList = mutableListOf<SpentResponse>()
         val spentsList: List<Spent> = spentRepository.findAll()
 
@@ -53,17 +41,11 @@ class SpentService {
         return spentsResponseList
     }
 
-    /**
-     * Retorna todos os gastos de um usuário
-     *
-     * @param  id  Id do usuário para filtrar os gastos
-     * @return MutableList do DTO SpentResponse com os gastos encontrados
-     */
-    fun getBydUserId(id: Long): MutableList<SpentResponse> {
+    override fun getBydUserId(id: Long): MutableList<SpentResponse> {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         spentsResponseList = mutableListOf<SpentResponse>()
@@ -77,33 +59,21 @@ class SpentService {
         return spentsResponseList
     }
 
-
-    /**
-     * Retorna um gasto pelo seu Id
-     *
-     * @param  id  Id do gasto a ser encontrado
-     * @return  o DTO SpentResponse do gasto encontrado
-     */
-    fun getById(id: Long): SpentResponse {
+    override fun getById(id: Long): SpentResponse {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
+            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
         }
 
         return SpentResponse(spent.get().spentValue, spent.get().spentDate, spent.get().descritpion, spent.get().user?.name)
     }
 
-    /**
-     * Deleta um gasto pelo seu Id
-     *
-     * @param  id  Id do gasto a ser deletado
-     */
-    fun deleteById(id: Long) {
+    override fun deleteById(id: Long) {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
+            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
         }
 
         spentRepository.deleteById(id)
@@ -120,7 +90,7 @@ class SpentService {
         val user = userRepository.findById(spentRequest.userId!!)
 
         if (!user.isPresent) {
-            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
         }
 
         spent.spentDate = spentRequest.spentDate

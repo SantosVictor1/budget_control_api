@@ -5,5 +5,5 @@ package com.budget.api.message.response.error
  */
 class ErrorResponse(
     val httpStatus: Int,
-    val errors: MutableList<ErrorSupport>
+    val errorsList: MutableList<ErrorSupport>
 )

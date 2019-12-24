@@ -2,6 +2,7 @@ package com.budget.api.controller
 
 import com.budget.api.message.request.SpentRequest
 import com.budget.api.message.response.error.ErrorResponse
+import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SpentResponse
 import com.budget.api.service.SpentService
 import io.swagger.annotations.ApiOperation
@@ -10,7 +11,9 @@ import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 /**
  * Created by Victor Santos on 16/12/2019
@@ -30,7 +33,18 @@ class SpentController {
         ApiResponse(code = 404, message = "Servidor não encontrado")
     )
     @PostMapping("/spents")
-    fun newSpent(@RequestBody spentRequest: SpentRequest): ResponseEntity<SpentResponse> {
+    fun newSpent(
+        @RequestBody @Valid spentRequest: SpentRequest,
+        result: BindingResult
+    ): ResponseEntity<Any> {
+        if (result.hasErrors()) {
+            val errorsList = mutableListOf<ErrorSupport>()
+            result.allErrors.forEach {
+                errorsList.add(ErrorSupport(it.defaultMessage.toString()))
+            }
+
+            return ResponseEntity(ErrorResponse(400, errorsList), HttpStatus.BAD_REQUEST)
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(spentService.saveSpent(spentRequest))
     }
 

@@ -2,30 +2,29 @@ package com.budget.api.message.request
 
 import org.hibernate.validator.constraints.br.CPF
 import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 /**
  * Created by Victor Santos on 06/12/2019
  */
-class UserRequest(
-    @NotBlank(message = "Nome obrigatório")
-    @Size(min = 3, max = 80, message = "Nome deve ter mínimo de 3 caracteres e máximo de 80 caracteres")
-    val name: String,
+class UserRequest {
+    @NotNull(message = "Nome obrigatório")
+    @Size(min = 3, max = 80, message = "Nome deve ter entre 3 e 80 caracteres")
+    val name: String? = null
 
-    @NotBlank(message = "Email obrigatório")
+    @NotNull(message = "Email obrigatório")
     @Email(message = "Email inválido")
-    val email: String,
+    val email: String? = null
 
-    @NotBlank(message = "CPF obrigatório")
-    @CPF
-    val cpf: String,
+    @NotNull(message = "CPF obrigatório")
+    @CPF(message = "CPF inválido")
+    val cpf: String? = null
 
-    @NotBlank(message = "Senha obrigatória")
+    @NotNull(message = "Senha obrigatória")
     @Size(min = 8, message = "Senha deve ser maior que 8 caracteres")
-    val password: String,
+    val password: String? = null
 
     @NotNull(message = "Renda obrigatória")
-    var income: Double
-)
+    val income: Double? = null
+}

@@ -1,6 +1,7 @@
 package com.budget.api.service
 
 import com.budget.api.message.request.SpentRequest
+import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SpentResponse
 import com.budget.api.model.Spent
 import com.budget.api.model.User
@@ -29,7 +30,6 @@ class SpentService {
      */
     fun saveSpent(spentRequest: SpentRequest): SpentResponse {
         var spent = setSpent(spentRequest)
-        validateFields(spentRequest)
 
         spent = spentRepository.save(spent)
 
@@ -63,7 +63,7 @@ class SpentService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, "Usuário não encontrado")
+            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
         }
 
         spentsResponseList = mutableListOf<SpentResponse>()
@@ -88,7 +88,7 @@ class SpentService {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, "Gasto não encontrado")
+            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
         }
 
         return SpentResponse(spent.get().spentValue, spent.get().spentDate, spent.get().descritpion, spent.get().user?.name)
@@ -103,7 +103,7 @@ class SpentService {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            throw BudgetException(404, "Gasto não encontrado")
+            throw BudgetException(404, mutableListOf(ErrorSupport("Gasto não encontrado")))
         }
 
         spentRepository.deleteById(id)
@@ -117,33 +117,17 @@ class SpentService {
      */
     private fun setSpent(spentRequest: SpentRequest): Spent {
         var spent: Spent = Spent()
-        val user: User = userRepository.findById(spentRequest.userId).get()
+        val user = userRepository.findById(spentRequest.userId!!)
+
+        if (!user.isPresent) {
+            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
+        }
 
         spent.spentDate = spentRequest.spentDate
         spent.descritpion = spentRequest.description
         spent.spentValue = spentRequest.spentValue
-        spent.user = user
+        spent.user = user.get()
 
         return spent
-    }
-
-
-    /**
-     * Valida os campos enviados para cadastro
-     *
-     * @param  spentRequest  DTO que será validado
-     */
-    private fun validateFields(spentRequest: SpentRequest) {
-        if (spentRequest.description?.isEmpty()!!) {
-            throw BudgetException(400, "Descrição é obrigatória")
-        }
-
-        if (spentRequest.spentDate == null) {
-            throw BudgetException(400, "Data é obrigatória")
-        }
-
-        if (spentRequest.spentValue == null) {
-            throw BudgetException(400, "Valor gasto é obrigatório")
-        }
     }
 }

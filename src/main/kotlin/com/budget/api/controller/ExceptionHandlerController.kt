@@ -1,6 +1,7 @@
 package com.budget.api.controller
 
 import com.budget.api.message.response.error.ErrorResponse
+import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.service.exception.BudgetException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -23,22 +24,6 @@ class ExceptionHandlerController {
      */
     @ExceptionHandler(BudgetException::class)
     fun validation(e: BudgetException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-        errorResponse = ErrorResponse(e.status, e.errorMessage)
-
-        return ResponseEntity.status(errorResponse.statusCode).body(errorResponse)
-    }
-
-    /**
-     * Trata as exceções do tipo ConstraintViolationException
-     *
-     * @return ResponseEntity do tipo ErrorResponse
-     */
-    @ExceptionHandler(ConstraintViolationException::class)
-    fun validateCpf(e: ConstraintViolationException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-        if (e.localizedMessage.contains("CPF inválido")) {
-            errorResponse = ErrorResponse(400, "CPF inválido")
-        }
-
-        return ResponseEntity.status(errorResponse.statusCode).body(errorResponse)
+        return ResponseEntity.status(e.status).body(ErrorResponse(e.status, e.errorsList))
     }
 }

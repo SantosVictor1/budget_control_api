@@ -8,16 +8,17 @@ import javax.validation.constraints.NotNull
 /**
  * Created by Victor Santos on 16/12/2019
  */
-class SpentRequest(
+class SpentRequest {
     @NotNull(message = "Valor obrigatório")
-    val spentValue: Double?,
-    
+    val spentValue: Double? = null
+
     @JsonFormat(pattern = "dd/MM/yyy")
-    val spentDate: Date?,
+    @NotNull(message = "Data obrigatória")
+    val spentDate: Date? = null
 
-    @NotBlank(message = "Local obrigatório")
-    val description: String?,
+    @NotNull(message = "Local obrigatório")
+    val description: String? = null
 
-    @NotNull(message ="UserId obrigatório")
-    val userId: Long
-)
+    @NotNull(message = "UserId obrigatório")
+    val userId: Long? = null
+}

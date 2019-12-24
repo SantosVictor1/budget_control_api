@@ -3,16 +3,19 @@ package com.budget.api.controller
 import com.budget.api.message.request.PasswordRequest
 import com.budget.api.message.request.UserRequest
 import com.budget.api.message.response.error.ErrorResponse
+import com.budget.api.message.response.error.ErrorSupport
 import com.budget.api.message.response.success.SuccessResponse
 import com.budget.api.message.response.success.UserResponse
 import com.budget.api.model.User
 import com.budget.api.service.UserService
+import com.budget.api.service.exception.BudgetException
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -35,13 +38,13 @@ class UserController {
         ApiResponse(code = 404, message = "Servidor não encontrado")
     )
     @PostMapping("/users")
-    fun createUser(@RequestBody @Valid  userRequest: UserRequest): ResponseEntity<Any> {
-        var userResponse: UserResponse
+    fun createUser(
+        @RequestBody @Valid userRequest: UserRequest,
+        result: BindingResult
+    ): ResponseEntity<Any> {
+        validateResult(result)
 
-        val userSaved =  userService.createUser(userRequest)
-        userResponse = UserResponse(userSaved.id ,userSaved.name, userSaved.email, userSaved.cpf, userSaved.income, null)
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse)
+        return ResponseEntity(userService.createUser(userRequest), HttpStatus.CREATED)
     }
 
     @ApiOperation(value = "Atualiza a senha do usuário")
@@ -52,14 +55,18 @@ class UserController {
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ErrorResponse::class)
     )
     @PatchMapping("/users/{id}")
-    fun updatePassword(@RequestBody passwordRequest: PasswordRequest, @PathVariable id: Long): ResponseEntity<Any> {
+    fun updatePassword(
+        @RequestBody @Valid passwordRequest: PasswordRequest,
+        result: BindingResult,
+        @PathVariable id: Long
+    ): ResponseEntity<Any> {
+        validateResult(result)
+
         var user: User = userService.getById(id).get()
-        var successResponse: SuccessResponse = SuccessResponse("Senha alterada com sucesso!", 200)
 
         user.password = passwordRequest.password
-        userService.updateUser(user)
 
-        return ResponseEntity.ok().body(successResponse)
+        return ResponseEntity.ok().body(userService.updateUser(user))
     }
 
     @ApiOperation(value = "Retorna todos os usuários")
@@ -109,5 +116,16 @@ class UserController {
         userService.deleteById(id)
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    private fun validateResult(bindingResult: BindingResult) {
+        if (bindingResult.hasErrors()) {
+            var errorList = mutableListOf<ErrorSupport>()
+            bindingResult.allErrors.forEach {
+                errorList.add(ErrorSupport(it.defaultMessage.toString()))
+            }
+
+            throw BudgetException(400, errorList)
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.budget.api.service
 
 import com.budget.api.message.request.UserRequest
+import com.budget.api.message.response.error.ErrorSupport
+import com.budget.api.message.response.success.SuccessResponse
+import com.budget.api.message.response.success.UserResponse
 import com.budget.api.model.User
 import com.budget.api.repository.UserRepository
 import com.budget.api.service.exception.BudgetException
@@ -16,27 +19,7 @@ import java.util.regex.Pattern
 @Service
 class UserService {
     @Autowired
-    lateinit var userRepository: UserRepository
-
-    /**
-     * Método responsável por verificar se o cpf já existe
-     *
-     * @param  cpf  CPF para verificar duplicidade
-     * @return true se já existir o CPF
-     */
-    fun existsByCpf(cpf: String): Boolean {
-        return userRepository.existsByCpf(cpf)
-    }
-
-    /**
-     * Método responsável por verificar se o email já existe
-     *
-     * @param  email  Email para verificar duplicidade
-     * @return true se o email já existir
-     */
-    fun existsByEmail(email: String): Boolean {
-        return userRepository.existsByEmail(email)
-    }
+    private lateinit var userRepository: UserRepository
 
     /**
      * Método responsável por cadastrar o usuário
@@ -44,23 +27,25 @@ class UserService {
      * @param  userRequest  DTO de User
      * @return O usuário criado
      */
-    fun createUser(userRequest: UserRequest): User {
+    fun createUser(userRequest: UserRequest): UserResponse {
         val user = setUser(userRequest)
         validatePostFields(user)
 
-        return userRepository.save(user)
+        val userSaved = userRepository.save(user)
+
+        return UserResponse(userSaved.id, userSaved.name, userSaved.email, userSaved.cpf, userSaved.income, userSaved.spents)
     }
 
     /**
      * Método responsável por atualizar a senha de algum usuário
      *
      * @param  user  com a nova senha
-     * @return Usuário com a senha alterada
+     * @return DTO de sucesso
      */
-    fun updateUser(user: User): User {
-        validatePassword(user)
+    fun updateUser(user: User): SuccessResponse {
+        userRepository.save(user)
 
-        return userRepository.save(user)
+        return SuccessResponse(200, "Senha alterada com sucesso")
     }
 
     /**
@@ -82,7 +67,7 @@ class UserService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, "Usuário não encontrado")
+            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
         }
 
         return user
@@ -97,7 +82,7 @@ class UserService {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            throw BudgetException(404, "Usuário não encontrado")
+            throw BudgetException(404, mutableListOf(ErrorSupport("Usuário não encontrado")))
         }
 
         userRepository.deleteById(id)
@@ -122,57 +107,37 @@ class UserService {
     }
 
     /**
-     * Método responsável por validar a senha no POST e PUT
-     *
-     *  @param  user  User com a senha a ser validada
-     */
-    fun validatePassword(user: User) {
-        if (user.password?.length!! < 8) {
-            throw BudgetException(400, "Senha deve ser maior que 8 caracteres")
-        }
-    }
-
-    /**
      * Método responsável por validar os campos no POST
      *
      *  @param  user  usuário a ser validado
      */
-    fun validatePostFields(user: User) {
-        var pattern: Pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$")
-        var matcher: Matcher = pattern.matcher(user.email)
-
-        if (user.name?.isEmpty()!!) {
-            throw BudgetException(400, "Nome obrigatório")
+    private fun validatePostFields(user: User) {
+        if (existsByCpf(user.cpf!!)) {
+            throw BudgetException(400, mutableListOf(ErrorSupport("CPF já cadastrado")))
         }
 
-        if (user.name?.length!! < 3 || user.name?.length!! > 80) {
-            throw BudgetException(400, "Nome deve ter tamanho entre 3 e 80 caracteres")
+        if (existsByEmail(user.email!!)) {
+            throw BudgetException(400, mutableListOf(ErrorSupport("Email já cadastrado")))
         }
+    }
 
-        if (user.cpf?.isEmpty()!! || user.cpf?.length != 11) {
-            throw BudgetException(400, "CPF inválido")
-        }
+    /**
+     * Método responsável por verificar se o cpf já existe
+     *
+     * @param  cpf  CPF para verificar duplicidade
+     * @return true se já existir o CPF
+     */
+    private fun existsByCpf(cpf: String): Boolean {
+        return userRepository.existsByCpf(cpf)
+    }
 
-        if (user.email?.isEmpty()!!) {
-            throw BudgetException(400, "Email obrigatório")
-        }
-
-        if (user.income == null) {
-            throw BudgetException(400, "Renda inválida")
-        }
-
-        if (!matcher.matches()) {
-            throw BudgetException(400, "Email inválido")
-        }
-
-        if (userRepository.existsByCpf(user.cpf!!)) {
-            throw BudgetException(400, "CPF já cadastrado")
-        }
-
-        if (userRepository.existsByEmail(user.email!!)) {
-            throw BudgetException(400, "Email já cadastrado")
-        }
-
-        validatePassword(user)
+    /**
+     * Método responsável por verificar se o email já existe
+     *
+     * @param  email  Email para verificar duplicidade
+     * @return true se o email já existir
+     */
+    private fun existsByEmail(email: String): Boolean {
+        return userRepository.existsByEmail(email)
     }
 }

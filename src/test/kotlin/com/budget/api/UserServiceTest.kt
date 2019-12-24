@@ -24,42 +24,33 @@ class UserServiceTest {
     @Mock
     private lateinit var userRepository: UserRepository
 
-    private lateinit var userRequest: UserRequest
     private lateinit var user: User
 
     @Before
     fun setUser() {
-        userRequest = UserRequest(
-            userName = "Carolina",
-            userEmail = "carolina@gmail.com",
-            userCpf = "24572543615",
-            userPassword= "123456789",
-            userIncome =  2000.0
-        )
-
         user = User()
         user.income = 2000.0
         user.password = "123456789"
         user.email = "carolina@gmail.com"
-        user.cpf = "96807865015"
+        user.cpf = "24572543615"
         user.spents = null
     }
 
     @Test(expected = BudgetException::class)
     fun existsByEmailTest() {
-        Mockito.`when`(userRepository.existsByEmail(userRequest.email)).thenReturn(true)
+        Mockito.`when`(userRepository.existsByEmail(user.email)).thenReturn(true)
 
-        userService.createUser(userRequest)
+        userService.createUser(user)
 
-        Mockito.verify(userRepository, Mockito.times(1)).existsByEmail(userRequest.email)
+        Mockito.verify(userRepository, Mockito.times(1)).existsByEmail(user.email)
     }
 
     @Test(expected = BudgetException::class)
     fun existsByCpfTest() {
-        Mockito.`when`(userRepository.existsByCpf(userRequest.cpf)).thenReturn(true)
+        Mockito.`when`(userRepository.existsByCpf(user.cpf)).thenReturn(true)
 
-        userService.createUser(userRequest)
+        userService.createUser(user)
 
-        Mockito.verify(userRepository, Mockito.times(1)).existsByCpf(userRequest.cpf)
+        Mockito.verify(userRepository, Mockito.times(1)).existsByCpf(user.cpf)
     }
 }

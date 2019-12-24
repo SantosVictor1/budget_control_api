@@ -19,8 +19,7 @@ class UserService : IUserService {
     @Autowired
     private lateinit var userRepository: UserRepository
 
-    override fun createUser(userRequest: UserRequest): UserResponse {
-        val user = setUser(userRequest)
+    override fun createUser(user: User): UserResponse {
         validatePostFields(user)
 
         val userSaved = userRepository.save(user)
@@ -58,14 +57,7 @@ class UserService : IUserService {
         userRepository.deleteById(id)
     }
 
-    /**
-     * Método responsável por criar um objeto User
-     *
-     * @param userRequest DTO que será usado para criar um User
-     *
-     * @return User criado
-     */
-    private fun setUser(userRequest: UserRequest): User {
+    override fun setUser(userRequest: UserRequest): User {
         var user: User = User()
         user.cpf = userRequest.cpf
         user.name = userRequest.name

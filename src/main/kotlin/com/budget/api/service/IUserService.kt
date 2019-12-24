@@ -17,7 +17,7 @@ interface IUserService {
      * @param  userRequest  DTO de User
      * @return O usuário criado
      */
-    fun createUser(userRequest: UserRequest): UserResponse
+    fun createUser(user: User): UserResponse
 
     /**
      * Método responsável por atualizar a senha de algum usuário
@@ -48,4 +48,13 @@ interface IUserService {
      * @param  id  do usuário a ser deletado
      */
     fun deleteById(id: Long)
+
+    /**
+     * Método responsável por criar um objeto User
+     *
+     * @param userRequest DTO que será usado para criar um User
+     *
+     * @return User criado
+     */
+    fun setUser(userRequest: UserRequest): User
 }

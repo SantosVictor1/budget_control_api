@@ -43,7 +43,9 @@ class UserController {
     ): ResponseEntity<Any> {
         validateResult(result)
 
-        return ResponseEntity(userService.createUser(userRequest), HttpStatus.CREATED)
+        val user = userService.setUser(userRequest)
+
+        return ResponseEntity(userService.createUser(user), HttpStatus.CREATED)
     }
 
     @ApiOperation(value = "Atualiza a senha do usuário")

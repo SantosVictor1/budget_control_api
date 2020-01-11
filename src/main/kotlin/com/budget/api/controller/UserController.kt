@@ -8,6 +8,7 @@ import com.budget.api.dto.response.success.UserResponseDTO
 import com.budget.api.model.User
 import com.budget.api.service.IUserService
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.http.HttpStatus
@@ -44,13 +45,9 @@ class UserController(
         ApiResponse(code = 400, message = "Senha deve ter mais que 8 caracteres", response = ObjectErrorResponse::class),
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ObjectErrorResponse::class)
     )
-    @PatchMapping("/{id}")
-    fun updatePassword(@RequestBody @Valid passwordRequestDTO: PasswordRequestDTO, @PathVariable id: Long): ResponseEntity<Any> {
-        var user: User = userService.getById(id).get()
-
-        user.password = passwordRequestDTO.password
-
-        return ResponseEntity.ok().body(userService.updateUser(user))
+    @PatchMapping("/password")
+    fun updatePassword(@RequestBody @Valid passwordRequestDTO: PasswordRequestDTO): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(userService.updateUser(passwordRequestDTO))
     }
 
     @ApiOperation(value = "Retorna todos os usuários")
@@ -61,14 +58,7 @@ class UserController(
     )
     @GetMapping
     fun getAllUsers(): ResponseEntity<MutableList<UserResponseDTO>> {
-        var userResponseDTOList: MutableList<UserResponseDTO> = mutableListOf<UserResponseDTO>()
-        val response = userService.getAll()
-
-        response.forEach {
-            var userResponse = UserResponseDTO(it.id!!, it.name, it.email, it.cpf, it.income, it.spent!!)
-            userResponseDTOList.add(userResponse)
-        }
-        return ResponseEntity.ok().body(userResponseDTOList)
+        return ResponseEntity.ok().body(userService.getAll())
     }
 
     @ApiOperation(value = "Retorna o usuário pelo Id")
@@ -78,15 +68,19 @@ class UserController(
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ObjectErrorResponse::class)
     )
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<Any> {
-        val user = userService.getById(id).get()
-        lateinit var userResponseDTO: UserResponseDTO
+    fun getById(@PathVariable id: Long): ResponseEntity<UserResponseDTO> {
+        return ResponseEntity.ok().body(userService.getById(id))
+    }
 
-        user.let {
-            userResponseDTO = UserResponseDTO(it.id!!, it.name, it.email, it.cpf, it.income, it.spent!!)
-        }
-
-        return ResponseEntity.ok().body(userResponseDTO)
+    @ApiOperation(value = "Retorna o usuário pelo Cpf")
+    @ApiResponses(
+        ApiResponse(code = 200, message = "Usuário retornado com sucesso", response = UserResponseDTO::class),
+        ApiResponse(code = 401, message = "Você não está autenticado", response = ObjectErrorResponse::class),
+        ApiResponse(code = 404, message = "Usuário não encontrado", response = ObjectErrorResponse::class)
+    )
+    @GetMapping("/by-cpf")
+    fun getByCpf(@RequestParam(required = true, defaultValue = "") @ApiParam(required = true) cpf: String): ResponseEntity<UserResponseDTO> {
+        return ResponseEntity.ok().body(userService.getByCpf(cpf))
     }
 
     @ApiOperation(value = "Deleta um usuário")
@@ -95,9 +89,9 @@ class UserController(
         ApiResponse(code = 401, message = "Você não está autenticado", response = ObjectErrorResponse::class),
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ObjectErrorResponse::class)
     )
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: Long): ResponseEntity<Any> {
-        userService.deleteById(id)
+    @DeleteMapping("/delete")
+    fun deleteUser(@RequestParam(required = true, defaultValue = "") @ApiParam(required = true) cpf: String): ResponseEntity<Any> {
+        userService.deleteByCpf(cpf)
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }

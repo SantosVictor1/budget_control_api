@@ -1,5 +1,6 @@
 package com.budget.api.service
 
+import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.SuccessResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
@@ -25,36 +26,35 @@ interface IUserService {
      * @param  user  com a nova senha
      * @return DTO de sucesso
      */
-    fun updateUser(user: User): SuccessResponseDTO
+    fun updateUser(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO
 
     /**
      * Método responsável por listar todos os usuários cadastrados
      *
      * @return Lista dos usuários cadastrados
      */
-    fun getAll(): List<User>
+    fun getAll(): MutableList<UserResponseDTO>
 
     /**
      * Método responsável por listar o usuário pelo Id
      *
-     * @param  id  do usuário a ser encontrado
+     * @param  id  Id do usuário a ser encontrado
      * @return Optional do tipo User
      */
-    fun getById(id: Long): Optional<User>
+    fun getById(id: Long): UserResponseDTO
+
+    /**
+     * Método responsável por listar o usuário pelo CPF
+     *
+     * @param  cpf  CPF do usuário a ser encontrado
+     * @return Optional do tipo User
+     */
+    fun getByCpf(cpf: String): UserResponseDTO
 
     /**
      * Método responsável por usuário pelo Id
      *
-     * @param  id  do usuário a ser deletado
+     * @param  id  Id do usuário a ser deletado
      */
-    fun deleteById(id: Long)
-
-    /**
-     * Método responsável por criar um objeto User
-     *
-     * @param userRequestDTO DTO que será usado para criar um User
-     *
-     * @return User criado
-     */
-    fun setUser(userRequestDTO: UserRequestDTO): User
+    fun deleteByCpf(cpf: String)
 }

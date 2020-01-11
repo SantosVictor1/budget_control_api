@@ -4,7 +4,7 @@ package com.budget.api.common
  * Created by Victor Santos on 11/01/2020
  */
 class BudgetErrorCode {
-    val key: String
+    private val key: String
     val code: String
 
     private constructor(key: String, code: String) {
@@ -13,7 +13,7 @@ class BudgetErrorCode {
     }
 
     companion object {
-        //User Errors
+        //User Errors BUDGET001 to BUDGET100
         val BUDGET001: BudgetErrorCode = BudgetErrorCode("BUDGET-001", "required.name")
         val BUDGET002: BudgetErrorCode = BudgetErrorCode("BUDGET-002", "invalid.name.size")
         val BUDGET003: BudgetErrorCode = BudgetErrorCode("BUDGET-003", "required.email")
@@ -26,5 +26,6 @@ class BudgetErrorCode {
         val BUDGET010: BudgetErrorCode = BudgetErrorCode("BUDGET-010", "required.income")
         val BUDGET011: BudgetErrorCode = BudgetErrorCode("BUDGET-011", "duplicated.cpf")
         val BUDGET012: BudgetErrorCode = BudgetErrorCode("BUDGET-012", "duplicated.email")
+        val BUDGET013: BudgetErrorCode = BudgetErrorCode("BUDGET-013", "user.not.found")
     }
 }

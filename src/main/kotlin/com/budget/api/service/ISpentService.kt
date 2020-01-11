@@ -1,7 +1,7 @@
 package com.budget.api.service
 
-import com.budget.api.message.request.SpentRequest
-import com.budget.api.message.response.success.SpentResponse
+import com.budget.api.dto.request.SpentRequestDTO
+import com.budget.api.dto.response.success.SpentResponseDTO
 
 /**
  * Created by Victor Santos on 24/12/2019
@@ -9,40 +9,33 @@ import com.budget.api.message.response.success.SpentResponse
 interface ISpentService {
 
     /**
-     * Salva gasto de um usuário baseado em seu Id
+     * Method that saves a user's spent based on his cpf
      *
-     * @param  spentRequest  DTO de Spent
-     * @return  o DTO SpentRequest
+     * @param  spentRequestDTO  Spent's DTO
+     * @return  Spent's DTO with the necessary data
      */
-    fun saveSpent(spentRequest: SpentRequest): SpentResponse
+    fun saveSpent(spentRequestDTO: SpentRequestDTO): SpentResponseDTO
 
     /**
-     * Retorna todos os gastos salvos
+     * Method that gets all the spents from an user's cpf
      *
-     * @return MutableList do DTO SpentResponse com os gastos
+     * @param  cpf  CPF used in search
+     * @return  SpentResponseDTO MutableList with all spents found
      */
-    fun getSpents(): MutableList<SpentResponse>
+    fun getByUserCpf(cpf: String): MutableList<SpentResponseDTO>
 
     /**
-     * Retorna todos os gastos de um usuário
+     * Method that gets a spent by its Id
      *
-     * @param  id  Id do usuário para filtrar os gastos
-     * @return MutableList do DTO SpentResponse com os gastos encontrados
+     * @param  id  Id used in search
+     * @return  Spent's DTO with the necessary data
      */
-    fun getBydUserId(id: Long): MutableList<SpentResponse>
+    fun getById(id: Long): SpentResponseDTO
 
     /**
-     * Retorna um gasto pelo seu Id
+     * Method that deletes a spent by its Id
      *
-     * @param  id  Id do gasto a ser encontrado
-     * @return  o DTO SpentResponse do gasto encontrado
-     */
-    fun getById(id: Long): SpentResponse
-
-    /**
-     * Deleta um gasto pelo seu Id
-     *
-     * @param  id  Id do gasto a ser deletado
+     * @param  id  Id used in search
      */
     fun deleteById(id: Long)
 }

@@ -30,8 +30,8 @@ class SwaggerConfig {
 
     fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
-            .title("Controle Orçamental API REST")
-            .description("Aplicação feita com Spring Boot utilizando a linguagem Kotlin")
+            .title("Budgetary Control System")
+            .description("Application made using Spring Boot with Kotlin as language")
             .version("1.0")
             .contact(Contact("Victor Santos", "", "victor.udi10@hotmail.com"))
             .build()

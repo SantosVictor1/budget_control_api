@@ -1,10 +1,9 @@
 package com.budget.api.service
 
-import com.budget.api.message.request.UserRequest
-import com.budget.api.message.response.success.SuccessResponse
-import com.budget.api.message.response.success.UserResponse
-import com.budget.api.model.User
-import java.util.*
+import com.budget.api.dto.request.PasswordRequestDTO
+import com.budget.api.dto.request.UserRequestDTO
+import com.budget.api.dto.response.success.SuccessResponseDTO
+import com.budget.api.dto.response.success.UserResponseDTO
 
 /**
  * Created by Victor Santos on 24/12/2019
@@ -12,40 +11,49 @@ import java.util.*
 interface IUserService {
 
     /**
-     * Método responsável por cadastrar o usuário
+     * Method that validates and register a user
      *
-     * @param  userRequest  DTO de User
-     * @return O usuário criado
+     * @param  userRequestDTO  User's DTO received in the request
+     * @return A DTO with user's data without password
      */
-    fun createUser(userRequest: UserRequest): UserResponse
+    fun createUser(userRequestDTO: UserRequestDTO): UserResponseDTO
 
     /**
-     * Método responsável por atualizar a senha de algum usuário
+     * Method that updates a user's password
      *
-     * @param  user  com a nova senha
-     * @return DTO de sucesso
+     * @param  passwordRequestDTO  DTO containing the new password and the
+     * user's cpf
+     * @return SuccessResponseDTO which contains only the http status
      */
-    fun updateUser(user: User): SuccessResponse
+    fun updateUser(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO
 
     /**
-     * Método responsável por listar todos os usuários cadastrados
+     * Method that gets all the users registered
      *
-     * @return Lista dos usuários cadastrados
+     * @return The List of all users
      */
-    fun getAll(): List<User>
+    fun getAll(): MutableList<UserResponseDTO>
 
     /**
-     * Método responsável por listar o usuário pelo Id
+     * Method that get the user by its Id
      *
-     * @param  id  do usuário a ser encontrado
-     * @return Optional do tipo User
+     * @param  id  Id used in the search
+     * @return A DTO with user's data without password
      */
-    fun getById(id: Long): Optional<User>
+    fun getById(id: Long): UserResponseDTO
 
     /**
-     * Método responsável por usuário pelo Id
+     * Method that get the user by its cpf
      *
-     * @param  id  do usuário a ser deletado
+     * @param  cpf  CPF used in the search
+     * @return A DTO with user's data without password
      */
-    fun deleteById(id: Long)
+    fun getByCpf(cpf: String): UserResponseDTO
+
+    /**
+     * Method that deletes a user using its cpf in the search
+     *
+     * @param  cpf  CPF used in the search
+     */
+    fun deleteByCpf(cpf: String)
 }

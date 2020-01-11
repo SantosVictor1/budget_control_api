@@ -1,47 +1,47 @@
 package com.budget.api.model
 
-import org.hibernate.validator.constraints.br.CPF
+import com.budget.api.dto.request.UserRequestDTO
+import com.budget.api.dto.response.success.UserResponseDTO
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 /**
  * Created by Victor Santos on 24/11/2019
  */
 @Entity
-@Table(name = "users")
-class User {
+@Table(name = "user")
+class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
-    var id: Long? = null
+    var id: Long? = null,
 
-    @NotBlank(message = "Nome obrigatório")
-    @Size(min = 3, max = 80, message = "Nome deve ter mínimo de 3 caracteres e máximo de 80 caracteres")
-    @Column(name = "name")
-    var name: String? = null
+    @Column(name = "name", nullable = false)
+    var name: String,
 
-    @NotBlank(message = "CPF obrigatório")
-    @CPF
-    @Column(name = "cpf", unique = true)
-    var cpf: String? = null
+    @Column(name = "cpf", unique = true, nullable = false)
+    var cpf: String,
 
-    @NotBlank(message = "Email obrigatório")
-    @Email(message = "Email inválido")
-    @Column(name = "email", unique = true)
-    var email: String? = null
+    @Column(name = "email", unique = true, nullable = false)
+    var email: String,
 
-    @NotBlank(message = "Senha obrigatória")
-    @Size(min = 8, message = "Senha deve ser maior que 8 caracteres")
-    @Column(name = "password")
-    var password: String? = null
+    @Column(name = "password", nullable = false)
+    var password: String,
 
-    @NotNull(message = "Renda obrigatória")
-    @Column(name = "income")
-    var income: Double? = null
+    @Column(name = "income", nullable = false)
+    var income: Double,
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var spents: List<Spent>? = null
+    var spent: MutableList<Spent>?
+) {
+    companion object {
+        fun fromUserRequestToEntity(userRequestDTO: UserRequestDTO): User {
+            return User(null, userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income, null)
+        }
+
+        fun fromUserResponseToEntity(userResponseDTO: UserResponseDTO): User {
+            return User(userResponseDTO.id, userResponseDTO.name, userResponseDTO.cpf, userResponseDTO.email, "", userResponseDTO.income, userResponseDTO.spent)
+        }
+    }
 }

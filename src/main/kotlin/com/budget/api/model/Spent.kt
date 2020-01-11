@@ -1,37 +1,29 @@
 package com.budget.api.model
 
-import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 /**
  * Created by Victor Santos on 16/12/2019
  */
 @Entity
 @Table(name = "spent")
-class Spent {
+data class Spent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "spentId")
-    var id: Long? = null
+    val id: Long,
 
-    @NotNull(message = "Valor obrigatório")
-    @Column(name = "value")
-    var spentValue: Double? = null
+    @Column(name = "value", nullable = false)
+    val spentValue: Double,
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @Column(name = "spentDate")
-    var spentDate: Date? = null
+    @Column(name = "spentDate", nullable = false)
+    val spentDate: Date = Date(),
 
-    @NotBlank(message = "Local obrigatório")
-    @Column(name = "description")
-    var descritpion: String? = null
+    @Column(name = "description",  nullable = false)
+    val description: String,
 
     @ManyToOne(targetEntity = User::class)
     @JoinColumn(name = "userId", nullable = false)
-    @JsonIgnore
-    var user: User? = null
-}
+    val user: User
+)

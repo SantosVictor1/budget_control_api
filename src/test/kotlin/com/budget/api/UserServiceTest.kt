@@ -1,9 +1,8 @@
 package com.budget.api
 
-import com.budget.api.message.request.UserRequest
 import com.budget.api.model.User
 import com.budget.api.repository.UserRepository
-import com.budget.api.service.exception.BudgetException
+import com.budget.api.exception.BudgetException
 import com.budget.api.service.impl.UserService
 import org.junit.Before
 import org.junit.Test

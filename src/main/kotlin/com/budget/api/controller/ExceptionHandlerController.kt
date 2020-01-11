@@ -2,7 +2,7 @@ package com.budget.api.controller
 
 import com.budget.api.message.response.error.ErrorResponse
 import com.budget.api.message.response.error.ErrorSupport
-import com.budget.api.service.exception.BudgetException
+import com.budget.api.exception.BudgetException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler

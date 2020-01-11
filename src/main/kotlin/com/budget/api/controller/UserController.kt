@@ -1,5 +1,6 @@
 package com.budget.api.controller
 
+import com.budget.api.exception.BudgetException
 import com.budget.api.message.request.PasswordRequest
 import com.budget.api.message.request.UserRequest
 import com.budget.api.message.response.error.ErrorResponse
@@ -7,11 +8,9 @@ import com.budget.api.message.response.success.SuccessResponse
 import com.budget.api.message.response.success.UserResponse
 import com.budget.api.model.User
 import com.budget.api.service.IUserService
-import com.budget.api.service.exception.BudgetException
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -24,11 +23,9 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-class UserController {
-
-    @Autowired
-    private lateinit var userService: IUserService
-
+class UserController(
+    private val userService: IUserService
+) {
     @ApiOperation(value = "Cadastra um usuário")
     @ApiResponses(
         ApiResponse(code = 201, message = "Cadastro realizado com sucesso", response = UserResponse::class),

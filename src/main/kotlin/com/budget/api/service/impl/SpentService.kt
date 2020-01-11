@@ -6,7 +6,7 @@ import com.budget.api.model.Spent
 import com.budget.api.repository.SpentRepository
 import com.budget.api.repository.UserRepository
 import com.budget.api.service.ISpentService
-import com.budget.api.service.exception.BudgetException
+import com.budget.api.exception.BudgetException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

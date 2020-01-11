@@ -8,7 +8,6 @@ import com.budget.api.service.ISpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -21,10 +20,9 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-class SpentController {
-    @Autowired
-    private lateinit var spentService: ISpentService
-
+class SpentController(
+    private val spentService: ISpentService
+) {
     @ApiOperation(value = "Salva gasto de um usuário")
     @ApiResponses(
         ApiResponse(code = 201, message = "Cadastro realizado com sucesso", response = SpentResponse::class),

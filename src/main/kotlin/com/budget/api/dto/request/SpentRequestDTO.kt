@@ -1,6 +1,9 @@
 package com.budget.api.dto.request
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import org.hibernate.validator.constraints.br.CPF
 import java.util.*
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 /**
@@ -8,19 +11,20 @@ import javax.validation.constraints.NotNull
  */
 class SpentRequestDTO(
     spentValue: Double,
-    spentDate: Date,
+    spentDate: Date? = null,
     description: String,
     userCpf: String
 ) {
-    @NotNull(message = "Valor obrigatório")
+    @NotNull(message = "required.value")
     val spentValue: Double = spentValue
 
-    @NotNull(message = "Data obrigatória")
-    val spentDate: Date = spentDate
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @NotNull(message = "required.date")
+    val spentDate: Date? = spentDate
 
-    @NotNull(message = "Local obrigatório")
+    @NotBlank(message = "required.description")
     val description: String = description
 
-    @NotNull(message = "UserId obrigatório")
+    @CPF(message = "required.cpf")
     val userCpf: String = userCpf
 }

@@ -9,40 +9,33 @@ import com.budget.api.dto.response.success.SpentResponseDTO
 interface ISpentService {
 
     /**
-     * Salva gasto de um usuário baseado em seu Id
+     * Method that saves a user's spent based on his cpf
      *
-     * @param  spentRequestDTO  DTO de Spent
-     * @return  o DTO SpentRequest
+     * @param  spentRequestDTO  Spent's DTO
+     * @return  Spent's DTO with the necessary data
      */
     fun saveSpent(spentRequestDTO: SpentRequestDTO): SpentResponseDTO
 
     /**
-     * Retorna todos os gastos salvos
+     * Method that gets all the spents from an user's cpf
      *
-     * @return MutableList do DTO SpentResponse com os gastos
+     * @param  cpf  CPF used in search
+     * @return  SpentResponseDTO MutableList with all spents found
      */
-    fun getSpents(): MutableList<SpentResponseDTO>
+    fun getByUserCpf(cpf: String): MutableList<SpentResponseDTO>
 
     /**
-     * Retorna todos os gastos de um usuário
+     * Method that gets a spent by its Id
      *
-     * @param  id  Id do usuário para filtrar os gastos
-     * @return MutableList do DTO SpentResponse com os gastos encontrados
-     */
-    fun getBydUserId(id: Long): MutableList<SpentResponseDTO>
-
-    /**
-     * Retorna um gasto pelo seu Id
-     *
-     * @param  id  Id do gasto a ser encontrado
-     * @return  o DTO SpentResponse do gasto encontrado
+     * @param  id  Id used in search
+     * @return  Spent's DTO with the necessary data
      */
     fun getById(id: Long): SpentResponseDTO
 
     /**
-     * Deleta um gasto pelo seu Id
+     * Method that deletes a spent by its Id
      *
-     * @param  id  Id do gasto a ser deletado
+     * @param  id  Id used in search
      */
     fun deleteById(id: Long)
 }

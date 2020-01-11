@@ -1,5 +1,6 @@
 package com.budget.api.service.impl
 
+import com.budget.api.common.BudgetErrorCode
 import com.budget.api.dto.request.SpentRequestDTO
 import com.budget.api.dto.response.success.SpentResponseDTO
 import com.budget.api.model.Spent
@@ -7,6 +8,9 @@ import com.budget.api.repository.SpentRepository
 import com.budget.api.repository.UserRepository
 import com.budget.api.service.ISpentService
 import com.budget.api.exception.BudgetException
+import com.budget.api.exception.ResourceNotFoundException
+import com.budget.api.model.User
+import com.budget.api.service.IUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -14,90 +18,71 @@ import org.springframework.stereotype.Service
  * Created by Victor Santos on 16/12/2019
  */
 @Service
-class SpentServiceImpl/* : ISpentService*/ {
-//    @Autowired
-//    private lateinit var spentRepository: SpentRepository
-//    @Autowired
-//    private lateinit var userRepository: UserRepository
-//    private lateinit var spentsResponseDTOList: MutableList<SpentResponseDTO>
-//
-//    override fun saveSpent(spentRequestDTO: SpentRequestDTO): SpentResponseDTO {
-//        var spent = setSpent(spentRequestDTO)
-//
-//        spent = spentRepository.save(spent)
-//
-//        return SpentResponseDTO(spent.spentValue, spent.spentDate, spent.descritpion, spent.user?.name)
-//    }
-//
-//    override fun getSpents(): MutableList<SpentResponseDTO> {
-//        spentsResponseDTOList = mutableListOf<SpentResponseDTO>()
-//        val spentsList: List<Spent> = spentRepository.findAll()
-//
-//        spentsList.forEach{
-//            val spentResponse = SpentResponseDTO(it.spentValue, it.spentDate, it.descritpion, it.user?.name)
-//            spentsResponseDTOList.add(spentResponse)
-//        }
-//
-//        return spentsResponseDTOList
-//    }
-//
-//    override fun getBydUserId(id: Long): MutableList<SpentResponseDTO> {
-//        val user = userRepository.findById(id)
-//
-//        if (!user.isPresent) {
-//            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
-//        }
-//
-//        spentsResponseDTOList = mutableListOf<SpentResponseDTO>()
-//        val spentsByUserList: List<Spent> = spentRepository.findAllByUserId(id)
-//
-//        spentsByUserList.forEach{
-//            val spentResponse = SpentResponseDTO(it.spentValue, it.spentDate, it.descritpion, it.user?.name)
-//            spentsResponseDTOList.add(spentResponse)
-//        }
-//
-//        return spentsResponseDTOList
-//    }
-//
-//    override fun getById(id: Long): SpentResponseDTO {
-//        val spent = spentRepository.findById(id)
-//
-//        if (!spent.isPresent) {
-//            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
-//        }
-//
-//        return SpentResponseDTO(spent.get().spentValue, spent.get().spentDate, spent.get().descritpion, spent.get().user?.name)
-//    }
-//
-//    override fun deleteById(id: Long) {
-//        val spent = spentRepository.findById(id)
-//
-//        if (!spent.isPresent) {
-//            throw BudgetException(404, mutableListOf("Gasto não encontrado"))
-//        }
-//
-//        spentRepository.deleteById(id)
-//    }
-//
-//    /**
-//     * Cria um objeto Spent baseado no DTO SpentRequest
-//     *
-//     * @param  spentRequestDTO  DTO a ser convertido
-//     * @return  retorna o objeto Spent criado
-//     */
-//    private fun setSpent(spentRequestDTO: SpentRequestDTO): Spent {
-//        var spent: Spent = Spent()
-//        val user = userRepository.findById(spentRequestDTO.userId!!)
-//
-//        if (!user.isPresent) {
-//            throw BudgetException(404, mutableListOf("Usuário não encontrado"))
-//        }
-//
-//        spent.spentDate = spentRequestDTO.spentDate
-//        spent.descritpion = spentRequestDTO.description
-//        spent.spentValue = spentRequestDTO.spentValue
-//        spent.user = user.get()
-//
-//        return spent
-//    }
+class SpentServiceImpl(
+    private val spentRepository: SpentRepository,
+    private val userService: IUserService
+) : ISpentService {
+    private lateinit var spentResponseDTOList: MutableList<SpentResponseDTO>
+
+    override fun saveSpent(spentRequestDTO: SpentRequestDTO): SpentResponseDTO {
+        val user = findUserByCpf(spentRequestDTO.userCpf)
+        val spent = Spent.toEntity(spentRequestDTO, user)
+
+        return SpentResponseDTO.toDto(spentRepository.save(spent))
+    }
+
+    override fun getByUserCpf(cpf: String): MutableList<SpentResponseDTO> {
+        findUserByCpf(cpf)
+        val spentByUserList: List<Spent> = spentRepository.findAllByUserCpf(cpf)
+
+        spentResponseDTOList = mutableListOf()
+
+        spentByUserList.forEach{
+            spentResponseDTOList.add(SpentResponseDTO.toDto(it))
+        }
+
+        return spentResponseDTOList
+    }
+
+    override fun getById(id: Long): SpentResponseDTO {
+        val spent = spentRepository.findById(id)
+
+        if (!spent.isPresent) {
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.name)
+        }
+
+        return SpentResponseDTO.toDto(spent.get())
+    }
+
+    override fun deleteById(id: Long) {
+        val spent = spentRepository.findById(id)
+
+        if (!spent.isPresent) {
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", "Spent")
+        }
+
+        spentRepository.deleteById(id)
+    }
+
+    /**
+     * Method that calls the getByCpf method from userService
+     *
+     * @param  cpf  CPF used in the search
+     * @return The user found
+     */
+    private fun findUserByCpf(cpf: String): User {
+        return User.fromUserResponseToEntity(userService.getByCpf(cpf))
+    }
+
+    /**
+     * Method that throws the ResourceNotFoundException when the
+     * spent was not found at the database
+     *
+     * @param  errorCode  code from messages.properties
+     * @param  field  the field used for validation
+     * @param  objectName  then name of the object used for validation
+     */
+    private fun resourceNotFoundException(errorCode: String, field: String, objectName: String) {
+        throw ResourceNotFoundException(errorCode, field, objectName)
+    }
 }

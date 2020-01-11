@@ -27,5 +27,8 @@ class BudgetErrorCode {
         val BUDGET011: BudgetErrorCode = BudgetErrorCode("BUDGET-011", "duplicated.cpf")
         val BUDGET012: BudgetErrorCode = BudgetErrorCode("BUDGET-012", "duplicated.email")
         val BUDGET013: BudgetErrorCode = BudgetErrorCode("BUDGET-013", "user.not.found")
+
+        //Spent Errors BUDGET101 to BUDGET200
+        val BUDGET101: BudgetErrorCode = BudgetErrorCode("BUDGET-101", "spent.not.found")
     }
 }

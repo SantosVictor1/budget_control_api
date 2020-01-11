@@ -9,5 +9,11 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 interface SpentRepository : JpaRepository<Spent, Long> {
-    fun findAllByUserId(id: Long): List<Spent>
+    /**
+     * Method that find all the spents with the specified user's cpf
+     *
+     * @param  cpf  CPF used in search
+     * @return A MutableList with all Spents found
+     */
+    fun findAllByUserCpf(cpf: String): MutableList<Spent>
 }

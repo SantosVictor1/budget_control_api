@@ -11,7 +11,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "spent")
-data class Spent(
+class Spent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "spentId")
@@ -33,7 +33,7 @@ data class Spent(
 ) {
     companion object {
         fun toEntity(spentRequestDTO: SpentRequestDTO, user: User): Spent {
-            return Spent(null, spentRequestDTO.spentValue, spentRequestDTO.spentDate, spentRequestDTO.description, user)
+            return Spent(null, spentRequestDTO.spentValue, spentRequestDTO.spentDate!!, spentRequestDTO.description, user)
         }
     }
 }

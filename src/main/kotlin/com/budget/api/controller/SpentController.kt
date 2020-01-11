@@ -3,6 +3,7 @@ package com.budget.api.controller
 import com.budget.api.dto.request.SpentRequestDTO
 import com.budget.api.dto.response.error.ObjectErrorResponse
 import com.budget.api.dto.response.success.SpentResponseDTO
+import com.budget.api.dto.response.success.SpentSumResponseDTO
 import com.budget.api.service.ISpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -16,7 +17,7 @@ import javax.validation.Valid
  * Created by Victor Santos on 16/12/2019
  */
 @RestController
-@RequestMapping("/api/spents")
+@RequestMapping("/api/spending")
 @CrossOrigin("*")
 class SpentController(
     private val spentService: ISpentService
@@ -29,6 +30,11 @@ class SpentController(
     @GetMapping("/user")
     fun getAllFromUserCpf(@RequestParam cpf: String): ResponseEntity<MutableList<SpentResponseDTO>> {
         return ResponseEntity.ok().body(spentService.getByUserCpf(cpf))
+    }
+
+    @GetMapping("/sum")
+    fun getFinalSumByUserCpf(@RequestParam cpf: String): ResponseEntity<SpentSumResponseDTO> {
+        return ResponseEntity.ok(spentService.getSpentSumByUserCpf(cpf))
     }
 
     @GetMapping("/{id}")

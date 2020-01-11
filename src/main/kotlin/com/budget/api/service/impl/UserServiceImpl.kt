@@ -37,7 +37,7 @@ class UserServiceImpl(
     }
 
     override fun getAll(): MutableList<UserResponseDTO> {
-        var userResponseDTOList: MutableList<UserResponseDTO> = mutableListOf<UserResponseDTO>()
+        var userResponseDTOList: MutableList<UserResponseDTO> = mutableListOf()
         val users = userRepository.findAll()
 
         users.forEach {
@@ -51,7 +51,7 @@ class UserServiceImpl(
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "id", "User")
+            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "id", User.javaClass.canonicalName)
         }
 
         return UserResponseDTO.toDto(user.get())
@@ -61,7 +61,7 @@ class UserServiceImpl(
         val user = userRepository.findByCpf(cpf)
 
         if (user == null) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", "User")
+            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", User.javaClass.canonicalName)
         }
 
         return UserResponseDTO.toDto(user!!)

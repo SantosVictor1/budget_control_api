@@ -3,6 +3,7 @@ package com.budget.api.service.impl
 import com.budget.api.common.BudgetErrorCode
 import com.budget.api.dto.request.SpentRequestDTO
 import com.budget.api.dto.response.success.SpentResponseDTO
+import com.budget.api.dto.response.success.SpentSumResponseDTO
 import com.budget.api.exception.ResourceNotFoundException
 import com.budget.api.model.Spent
 import com.budget.api.model.User
@@ -41,11 +42,19 @@ class SpentServiceImpl(
         return spentResponseDTOList
     }
 
+    override fun getSpentSumByUserCpf(cpf: String): SpentSumResponseDTO {
+        val user = findUserByCpf(cpf)
+        val spentSum = spentRepository.sumValueByUserCpf(cpf)
+        val balance = user.income - spentSum
+
+        return SpentSumResponseDTO(spentSum, balance, cpf)
+    }
+
     override fun getById(id: Long): SpentResponseDTO {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.name)
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.canonicalName)
         }
 
         return SpentResponseDTO.toDto(spent.get())
@@ -55,7 +64,7 @@ class SpentServiceImpl(
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", "Spent")
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.canonicalName)
         }
 
         spentRepository.deleteById(id)

@@ -8,6 +8,7 @@ import java.util.*
  * Created by Victor Santos on 16/12/2019
  */
 class SpentResponseDTO(
+    val id: Long,
     val spentValue: Double,
     @JsonFormat(pattern = "dd/MM/yyyy")
     val spentDate: Date,
@@ -17,7 +18,7 @@ class SpentResponseDTO(
     companion object {
         fun toDto(spent: Spent): SpentResponseDTO {
             val user = UserSpentResponseDTO.toDto(spent.user!!)
-            return SpentResponseDTO(spent.spentValue, spent.spentDate, spent.description, user)
+            return SpentResponseDTO(spent.id!!, spent.spentValue, spent.spentDate, spent.description, user)
         }
     }
 }

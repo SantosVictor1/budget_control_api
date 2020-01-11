@@ -13,48 +13,49 @@ import java.util.*
 interface IUserService {
 
     /**
-     * Método responsável por cadastrar o usuário
+     * Method that validates and register a user
      *
-     * @param  userRequestDTO  DTO de User
-     * @return O usuário criado
+     * @param  userRequestDTO  User's DTO received in the request
+     * @return A DTO with user's data without password
      */
     fun createUser(userRequestDTO: UserRequestDTO): UserResponseDTO
 
     /**
-     * Método responsável por atualizar a senha de algum usuário
+     * Method that updates a user's password
      *
-     * @param  user  com a nova senha
-     * @return DTO de sucesso
+     * @param  passwordRequestDTO  DTO containing the new password and the
+     * user's cpf
+     * @return SuccessResponseDTO which contains only the http status
      */
     fun updateUser(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO
 
     /**
-     * Método responsável por listar todos os usuários cadastrados
+     * Method that gets all the users registered
      *
-     * @return Lista dos usuários cadastrados
+     * @return The List of all users
      */
     fun getAll(): MutableList<UserResponseDTO>
 
     /**
-     * Método responsável por listar o usuário pelo Id
+     * Method that get the user by its Id
      *
-     * @param  id  Id do usuário a ser encontrado
-     * @return Optional do tipo User
+     * @param  id  Id used in the search
+     * @return A DTO with user's data without password
      */
     fun getById(id: Long): UserResponseDTO
 
     /**
-     * Método responsável por listar o usuário pelo CPF
+     * Method that get the user by its cpf
      *
-     * @param  cpf  CPF do usuário a ser encontrado
-     * @return Optional do tipo User
+     * @param  cpf  CPF used in the search
+     * @return A DTO with user's data without password
      */
     fun getByCpf(cpf: String): UserResponseDTO
 
     /**
-     * Método responsável por usuário pelo Id
+     * Method that deletes a user using its cpf in the search
      *
-     * @param  id  Id do usuário a ser deletado
+     * @param  cpf  CPF used in the search
      */
     fun deleteByCpf(cpf: String)
 }

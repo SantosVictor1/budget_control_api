@@ -2,6 +2,7 @@ package com.budget.api.dto.request
 
 import org.hibernate.validator.constraints.br.CPF
 import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
@@ -15,22 +16,22 @@ class UserRequestDTO (
     password: String,
     income: Double
 ) {
-    @NotNull(message = "Nome obrigatório")
-    @Size(min = 3, max = 80, message = "Nome deve ter entre 3 e 80 caracteres")
+    @NotBlank(message = "required.name")
+    @Size(min = 3, message = "invalid.name.size")
     val name: String = name
 
-    @NotNull(message = "Email obrigatório")
-    @Email(message = "Email inválido")
+    @NotBlank(message = "required.email")
+    @Email(message = "invalid.email")
     val email: String = email
 
-    @NotNull(message = "CPF obrigatório")
-    @CPF(message = "CPF inválido")
+    @NotBlank(message = "required.cpf")
+    @CPF(message = "invalid.cpf")
     val cpf: String = cpf
 
-    @NotNull(message = "Senha obrigatória")
-    @Size(min = 8, message = "Senha deve ser maior que 8 caracteres")
+    @NotBlank(message = "required.password")
+    @Size(min = 8, message = "invalid.password.size")
     val password: String = password
 
-    @NotNull(message = "Renda obrigatória")
+    @NotNull(message = "required.income")
     val income: Double = income
 }

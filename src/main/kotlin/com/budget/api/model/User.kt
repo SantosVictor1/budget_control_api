@@ -1,6 +1,7 @@
 package com.budget.api.model
 
 import com.budget.api.dto.request.UserRequestDTO
+import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.*
 
 /**
@@ -27,11 +28,15 @@ data class User(
     var password: String,
 
     @Column(name = "income", nullable = false)
-    var income: Double
+    var income: Double,
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
+    var spent: MutableList<Spent>?
 ) {
     companion object {
         fun toEntity(userRequestDTO: UserRequestDTO): User {
-            return User(null, userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income)
+            return User(null, userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income, null)
         }
     }
 }

@@ -14,10 +14,10 @@ interface IUserService {
     /**
      * Método responsável por cadastrar o usuário
      *
-     * @param  userRequest  DTO de User
+     * @param  userRequestDTO  DTO de User
      * @return O usuário criado
      */
-    fun createUser(user: User): UserResponseDTO
+    fun createUser(userRequestDTO: UserRequestDTO): UserResponseDTO
 
     /**
      * Método responsável por atualizar a senha de algum usuário

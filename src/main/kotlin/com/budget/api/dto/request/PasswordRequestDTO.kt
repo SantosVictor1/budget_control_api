@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 class PasswordRequestDTO(
     password: String
 ) {
-    @NotBlank(message = "Senha obrigatória")
-    @Size(min = 8, message = "Senha deve ter mais que 8 caracteres")
+    @NotBlank(message = "required.password")
+    @Size(min = 8, message = "invalid.password.size")
     val password: String = password
 }

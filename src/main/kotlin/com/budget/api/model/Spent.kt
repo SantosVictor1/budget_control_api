@@ -1,6 +1,7 @@
 package com.budget.api.model
 
 import com.budget.api.dto.request.SpentRequestDTO
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.util.*
 import javax.persistence.*
 
@@ -24,6 +25,7 @@ data class Spent(
     @Column(name = "description",  nullable = false)
     var description: String,
 
+    @JsonManagedReference
     @ManyToOne(targetEntity = User::class)
     @JoinColumn(name = "userId", nullable = false)
     var user: User? = null

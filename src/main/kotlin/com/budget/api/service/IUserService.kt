@@ -1,8 +1,8 @@
 package com.budget.api.service
 
-import com.budget.api.message.request.UserRequest
-import com.budget.api.message.response.success.SuccessResponse
-import com.budget.api.message.response.success.UserResponse
+import com.budget.api.dto.request.UserRequestDTO
+import com.budget.api.dto.response.success.SuccessResponseDTO
+import com.budget.api.dto.response.success.UserResponseDTO
 import com.budget.api.model.User
 import java.util.*
 
@@ -17,7 +17,7 @@ interface IUserService {
      * @param  userRequest  DTO de User
      * @return O usuário criado
      */
-    fun createUser(user: User): UserResponse
+    fun createUser(user: User): UserResponseDTO
 
     /**
      * Método responsável por atualizar a senha de algum usuário
@@ -25,7 +25,7 @@ interface IUserService {
      * @param  user  com a nova senha
      * @return DTO de sucesso
      */
-    fun updateUser(user: User): SuccessResponse
+    fun updateUser(user: User): SuccessResponseDTO
 
     /**
      * Método responsável por listar todos os usuários cadastrados
@@ -52,9 +52,9 @@ interface IUserService {
     /**
      * Método responsável por criar um objeto User
      *
-     * @param userRequest DTO que será usado para criar um User
+     * @param userRequestDTO DTO que será usado para criar um User
      *
      * @return User criado
      */
-    fun setUser(userRequest: UserRequest): User
+    fun setUser(userRequestDTO: UserRequestDTO): User
 }

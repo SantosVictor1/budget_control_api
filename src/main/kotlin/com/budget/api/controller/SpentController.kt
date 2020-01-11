@@ -1,9 +1,9 @@
 package com.budget.api.controller
 
-import com.budget.api.message.request.SpentRequest
-import com.budget.api.message.response.error.ErrorResponse
-import com.budget.api.message.response.error.ErrorSupport
-import com.budget.api.message.response.success.SpentResponse
+import com.budget.api.dto.request.SpentRequestDTO
+import com.budget.api.dto.response.error.ErrorResponse
+import com.budget.api.dto.response.error.ErrorSupport
+import com.budget.api.dto.response.success.SpentResponseDTO
 import com.budget.api.service.ISpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -25,14 +25,14 @@ class SpentController(
 ) {
     @ApiOperation(value = "Salva gasto de um usuário")
     @ApiResponses(
-        ApiResponse(code = 201, message = "Cadastro realizado com sucesso", response = SpentResponse::class),
+        ApiResponse(code = 201, message = "Cadastro realizado com sucesso", response = SpentResponseDTO::class),
         ApiResponse(code = 400, message = "Algum dado é inválido", response = ErrorResponse::class),
         ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
         ApiResponse(code = 404, message = "Servidor não encontrado")
     )
     @PostMapping("/spents")
     fun newSpent(
-        @RequestBody @Valid spentRequest: SpentRequest,
+        @RequestBody @Valid spentRequestDTO: SpentRequestDTO,
         result: BindingResult
     ): ResponseEntity<Any> {
         if (result.hasErrors()) {
@@ -43,39 +43,39 @@ class SpentController(
 
             return ResponseEntity(ErrorResponse(400, errorsList), HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(spentService.saveSpent(spentRequest))
+        return ResponseEntity.status(HttpStatus.CREATED).body(spentService.saveSpent(spentRequestDTO))
     }
 
     @ApiOperation(value = "Retorna todos os gastos cadastrados")
     @ApiResponses(
-        ApiResponse(code = 200, message = "Gastos retornados com sucesso", response = SpentResponse::class, responseContainer = "List"),
+        ApiResponse(code = 200, message = "Gastos retornados com sucesso", response = SpentResponseDTO::class, responseContainer = "List"),
         ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
         ApiResponse(code = 404, message = "Servidor não encontrado")
     )
     @GetMapping("/spents")
-    fun getAll(): ResponseEntity<MutableList<SpentResponse>> {
+    fun getAll(): ResponseEntity<MutableList<SpentResponseDTO>> {
         return ResponseEntity.ok().body(spentService.getSpents())
     }
 
     @ApiOperation(value = "Retorna gastos de um usuário")
     @ApiResponses(
-        ApiResponse(code = 200, message = "Gastos retornados com sucesso", response = SpentResponse::class, responseContainer = "List"),
+        ApiResponse(code = 200, message = "Gastos retornados com sucesso", response = SpentResponseDTO::class, responseContainer = "List"),
         ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
         ApiResponse(code = 404, message = "Usuário não encontrado", response = ErrorResponse::class)
     )
     @GetMapping("/spents/user/{userId}")
-    fun getAllFromUserId(@PathVariable userId: Long): ResponseEntity<MutableList<SpentResponse>> {
+    fun getAllFromUserId(@PathVariable userId: Long): ResponseEntity<MutableList<SpentResponseDTO>> {
         return ResponseEntity.ok().body(spentService.getBydUserId(userId))
     }
 
     @ApiOperation(value = "Retorna um gasto pelo id")
     @ApiResponses(
-        ApiResponse(code = 200, message = "Gasto retornado com sucesso", response = SpentResponse::class),
+        ApiResponse(code = 200, message = "Gasto retornado com sucesso", response = SpentResponseDTO::class),
         ApiResponse(code = 401, message = "Você não está autenticado", response = ErrorResponse::class),
         ApiResponse(code = 404, message = "Gasto não encontrado", response = ErrorResponse::class)
     )
     @GetMapping("spents/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<SpentResponse> {
+    fun getById(@PathVariable id: Long): ResponseEntity<SpentResponseDTO> {
         return ResponseEntity.ok().body(spentService.getById(id))
     }
 

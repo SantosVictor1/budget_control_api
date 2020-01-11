@@ -1,7 +1,7 @@
 package com.budget.api.service
 
-import com.budget.api.message.request.SpentRequest
-import com.budget.api.message.response.success.SpentResponse
+import com.budget.api.dto.request.SpentRequestDTO
+import com.budget.api.dto.response.success.SpentResponseDTO
 
 /**
  * Created by Victor Santos on 24/12/2019
@@ -11,17 +11,17 @@ interface ISpentService {
     /**
      * Salva gasto de um usuário baseado em seu Id
      *
-     * @param  spentRequest  DTO de Spent
+     * @param  spentRequestDTO  DTO de Spent
      * @return  o DTO SpentRequest
      */
-    fun saveSpent(spentRequest: SpentRequest): SpentResponse
+    fun saveSpent(spentRequestDTO: SpentRequestDTO): SpentResponseDTO
 
     /**
      * Retorna todos os gastos salvos
      *
      * @return MutableList do DTO SpentResponse com os gastos
      */
-    fun getSpents(): MutableList<SpentResponse>
+    fun getSpents(): MutableList<SpentResponseDTO>
 
     /**
      * Retorna todos os gastos de um usuário
@@ -29,7 +29,7 @@ interface ISpentService {
      * @param  id  Id do usuário para filtrar os gastos
      * @return MutableList do DTO SpentResponse com os gastos encontrados
      */
-    fun getBydUserId(id: Long): MutableList<SpentResponse>
+    fun getBydUserId(id: Long): MutableList<SpentResponseDTO>
 
     /**
      * Retorna um gasto pelo seu Id
@@ -37,7 +37,7 @@ interface ISpentService {
      * @param  id  Id do gasto a ser encontrado
      * @return  o DTO SpentResponse do gasto encontrado
      */
-    fun getById(id: Long): SpentResponse
+    fun getById(id: Long): SpentResponseDTO
 
     /**
      * Deleta um gasto pelo seu Id

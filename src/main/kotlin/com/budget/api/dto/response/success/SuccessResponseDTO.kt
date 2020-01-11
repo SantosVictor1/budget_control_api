@@ -1,9 +1,9 @@
-package com.budget.api.message.response.success
+package com.budget.api.dto.response.success
 
 /**
  * Created by Victor Santos on 10/12/2019
  */
-class SuccessResponse(
+class SuccessResponseDTO(
     val httpStatus: Int,
     val message: String
 )

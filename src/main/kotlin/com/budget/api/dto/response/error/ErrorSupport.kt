@@ -1,4 +1,4 @@
-package com.budget.api.message.response.error
+package com.budget.api.dto.response.error
 
 /**
  * Created by Victor Santos on 24/12/2019

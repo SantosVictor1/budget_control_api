@@ -1,5 +1,6 @@
 package com.budget.api.model
 
+import com.budget.api.dto.request.SpentRequestDTO
 import java.util.*
 import javax.persistence.*
 
@@ -12,18 +13,24 @@ data class Spent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "spentId")
-    val id: Long,
+    var id: Long? = null,
 
     @Column(name = "value", nullable = false)
-    val spentValue: Double,
+    var spentValue: Double,
 
     @Column(name = "spentDate", nullable = false)
-    val spentDate: Date = Date(),
+    var spentDate: Date,
 
     @Column(name = "description",  nullable = false)
-    val description: String,
+    var description: String,
 
     @ManyToOne(targetEntity = User::class)
     @JoinColumn(name = "userId", nullable = false)
-    val user: User
-)
+    var user: User? = null
+) {
+    companion object {
+        fun toEntity(spentRequestDTO: SpentRequestDTO, user: User): Spent {
+            return Spent(null, spentRequestDTO.spentValue, spentRequestDTO.spentDate, spentRequestDTO.description, user)
+        }
+    }
+}

@@ -1,5 +1,6 @@
 package com.budget.api.model
 
+import com.budget.api.dto.request.UserRequestDTO
 import javax.persistence.*
 
 /**
@@ -11,20 +12,26 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
-    val id: Long? = null,
+    var id: Long? = null,
 
     @Column(name = "name", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name = "cpf", unique = true, nullable = false)
-    val cpf: String,
+    var cpf: String,
 
     @Column(name = "email", unique = true, nullable = false)
-    val email: String,
+    var email: String,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 
     @Column(name = "income", nullable = false)
-    val income: Double
-)
+    var income: Double
+) {
+    companion object {
+        fun toEntity(userRequestDTO: UserRequestDTO): User {
+            return User(null, userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income)
+        }
+    }
+}

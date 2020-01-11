@@ -2,7 +2,6 @@ package com.budget.api.model
 
 import com.budget.api.dto.request.SpentRequestDTO
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.util.*
 import javax.persistence.*
 
@@ -23,7 +22,7 @@ class Spent(
     @Column(name = "spentDate", nullable = false)
     var spentDate: Date,
 
-    @Column(name = "description",  nullable = false)
+    @Column(name = "description", nullable = false)
     var description: String,
 
     @JsonBackReference

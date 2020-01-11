@@ -4,8 +4,6 @@ import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.SuccessResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
-import com.budget.api.model.User
-import java.util.*
 
 /**
  * Created by Victor Santos on 24/12/2019

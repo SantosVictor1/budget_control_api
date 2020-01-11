@@ -5,7 +5,7 @@ import com.budget.api.model.User
 /**
  * Created by Victor Santos on 11/01/2020
  */
-class UserSpentResponseDTO (
+class UserSpentResponseDTO(
     val id: Long,
     val name: String,
     val cpf: String

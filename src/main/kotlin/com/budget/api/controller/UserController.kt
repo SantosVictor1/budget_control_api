@@ -2,15 +2,9 @@ package com.budget.api.controller
 
 import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
-import com.budget.api.dto.response.error.ObjectErrorResponse
-import com.budget.api.dto.response.success.SuccessResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
-import com.budget.api.model.User
 import com.budget.api.service.IUserService
-import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

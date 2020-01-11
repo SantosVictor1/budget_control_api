@@ -2,7 +2,6 @@ package com.budget.api.model
 
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.UserResponseDTO
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
 

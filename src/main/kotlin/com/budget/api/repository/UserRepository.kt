@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
  * Created by Victor Santos on 24/11/2019
  */
 @Repository
-interface UserRepository: JpaRepository<User, Long> {
+interface UserRepository : JpaRepository<User, Long> {
     /**
      * Method that checks if exists a user with the specified cpf
      * in the system

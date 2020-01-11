@@ -3,15 +3,12 @@ package com.budget.api.service.impl
 import com.budget.api.common.BudgetErrorCode
 import com.budget.api.dto.request.SpentRequestDTO
 import com.budget.api.dto.response.success.SpentResponseDTO
-import com.budget.api.model.Spent
-import com.budget.api.repository.SpentRepository
-import com.budget.api.repository.UserRepository
-import com.budget.api.service.ISpentService
-import com.budget.api.exception.BudgetException
 import com.budget.api.exception.ResourceNotFoundException
+import com.budget.api.model.Spent
 import com.budget.api.model.User
+import com.budget.api.repository.SpentRepository
+import com.budget.api.service.ISpentService
 import com.budget.api.service.IUserService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
@@ -37,7 +34,7 @@ class SpentServiceImpl(
 
         spentResponseDTOList = mutableListOf()
 
-        spentByUserList.forEach{
+        spentByUserList.forEach {
             spentResponseDTOList.add(SpentResponseDTO.toDto(it))
         }
 

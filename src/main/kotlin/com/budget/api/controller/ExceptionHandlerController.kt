@@ -5,13 +5,11 @@ import com.budget.api.dto.response.error.FieldError
 import com.budget.api.dto.response.error.ObjectErrorResponse
 import com.budget.api.exception.DuplicatedResourceException
 import com.budget.api.exception.ResourceNotFoundException
-import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import javax.servlet.http.HttpServletRequest
 
 /**
  * Created by Victor Santos on 13/12/2019

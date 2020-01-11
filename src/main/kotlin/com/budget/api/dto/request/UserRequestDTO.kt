@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 /**
  * Created by Victor Santos on 06/12/2019
  */
-class UserRequestDTO (
+class UserRequestDTO(
     name: String,
     email: String,
     cpf: String,

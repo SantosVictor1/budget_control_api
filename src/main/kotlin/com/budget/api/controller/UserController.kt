@@ -1,7 +1,10 @@
 package com.budget.api.controller
 
+import com.budget.api.dto.request.IncomeRequestDTO
 import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
+import com.budget.api.dto.response.success.SuccessResponseDTO
+import com.budget.api.dto.response.success.UserIncomeResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
 import com.budget.api.service.IUserService
 import io.swagger.annotations.ApiParam
@@ -21,13 +24,18 @@ class UserController(
 ) {
 
     @PostMapping
-    fun createUser(@RequestBody @Valid userRequestDTO: UserRequestDTO): ResponseEntity<Any> {
+    fun createUser(@RequestBody @Valid userRequestDTO: UserRequestDTO): ResponseEntity<UserResponseDTO> {
         return ResponseEntity(userService.createUser(userRequestDTO), HttpStatus.CREATED)
     }
 
     @PatchMapping("/password")
-    fun updatePassword(@RequestBody @Valid passwordRequestDTO: PasswordRequestDTO): ResponseEntity<Any> {
-        return ResponseEntity.ok().body(userService.updateUser(passwordRequestDTO))
+    fun updatePassword(@RequestBody @Valid passwordRequestDTO: PasswordRequestDTO): ResponseEntity<SuccessResponseDTO> {
+        return ResponseEntity.ok().body(userService.updateUserPassword(passwordRequestDTO))
+    }
+
+    @PatchMapping("/income")
+    fun updateIncome(@RequestBody @Valid incomeRequestDTO: IncomeRequestDTO): ResponseEntity<UserIncomeResponseDTO> {
+        return ResponseEntity.ok(userService. updateUserIncome(incomeRequestDTO))
     }
 
     @GetMapping

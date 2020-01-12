@@ -1,9 +1,11 @@
 package com.budget.api.service.impl
 
 import com.budget.api.common.BudgetErrorCode
+import com.budget.api.dto.request.IncomeRequestDTO
 import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.SuccessResponseDTO
+import com.budget.api.dto.response.success.UserIncomeResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
 import com.budget.api.exception.DuplicatedResourceException
 import com.budget.api.exception.ResourceNotFoundException
@@ -26,7 +28,7 @@ class UserServiceImpl(
         return UserResponseDTO.toDto(userRepository.save(user))
     }
 
-    override fun updateUser(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO {
+    override fun updateUserPassword(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO {
         var user: User = User.fromUserResponseToEntity(getByCpf(passwordRequestDTO.cpf))
 
         user.password = passwordRequestDTO.password
@@ -34,6 +36,14 @@ class UserServiceImpl(
         userRepository.save(user)
 
         return SuccessResponseDTO(200)
+    }
+
+    override fun updateUserIncome(incomeRequestDTO: IncomeRequestDTO): UserIncomeResponseDTO {
+        var user: User = User.fromUserResponseToEntity(getByCpf(incomeRequestDTO.cpf))
+
+        user.income = incomeRequestDTO.income
+
+        return UserIncomeResponseDTO.toDto(userRepository.save(user))
     }
 
     override fun getAll(): MutableList<UserResponseDTO> {

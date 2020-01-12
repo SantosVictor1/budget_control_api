@@ -1,8 +1,10 @@
 package com.budget.api.service
 
+import com.budget.api.dto.request.IncomeRequestDTO
 import com.budget.api.dto.request.PasswordRequestDTO
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.SuccessResponseDTO
+import com.budget.api.dto.response.success.UserIncomeResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
 
 /**
@@ -25,7 +27,16 @@ interface IUserService {
      * user's cpf
      * @return SuccessResponseDTO which contains only the http status
      */
-    fun updateUser(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO
+    fun updateUserPassword(passwordRequestDTO: PasswordRequestDTO): SuccessResponseDTO
+
+    /**
+     * Method that updates a user's income
+     *
+     * @param  incomeRequestDTO  DTO containing the new income and the
+     * user's cpf
+     * @return UserIncomeResponseDTO which contains all the user's data
+     */
+    fun updateUserIncome(incomeRequestDTO: IncomeRequestDTO): UserIncomeResponseDTO
 
     /**
      * Method that gets all the users registered

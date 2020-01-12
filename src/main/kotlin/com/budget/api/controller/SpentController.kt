@@ -18,7 +18,6 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping("/api/spending")
-@CrossOrigin("*")
 class SpentController(
     private val spentService: ISpentService
 ) {

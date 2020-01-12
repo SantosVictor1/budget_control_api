@@ -1,4 +1,4 @@
-package com.budget.api.controller
+package com.budget.api.controller.exception
 
 import com.budget.api.common.MessageResource
 import com.budget.api.dto.response.error.FieldError

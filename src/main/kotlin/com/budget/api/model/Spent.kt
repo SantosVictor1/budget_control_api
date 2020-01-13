@@ -2,6 +2,7 @@ package com.budget.api.model
 
 import com.budget.api.dto.request.SpentRequestDTO
 import com.fasterxml.jackson.annotation.JsonBackReference
+import org.hibernate.annotations.GenericGenerator
 import java.util.*
 import javax.persistence.*
 
@@ -12,9 +13,10 @@ import javax.persistence.*
 @Table(name = "spent")
 class Spent(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "spentId")
-    var id: Long? = null,
+    var id: String? = UUID.randomUUID().toString(),
 
     @Column(name = "value", nullable = false)
     var spentValue: Double,
@@ -32,7 +34,7 @@ class Spent(
 ) {
     companion object {
         fun toEntity(spentRequestDTO: SpentRequestDTO, user: User): Spent {
-            return Spent(null, spentRequestDTO.spentValue, spentRequestDTO.spentDate!!, spentRequestDTO.description, user)
+            return Spent(UUID.randomUUID().toString(), spentRequestDTO.spentValue, spentRequestDTO.spentDate!!, spentRequestDTO.description, user)
         }
     }
 }

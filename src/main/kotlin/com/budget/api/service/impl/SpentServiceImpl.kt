@@ -11,6 +11,7 @@ import com.budget.api.repository.SpentRepository
 import com.budget.api.service.ISpentService
 import com.budget.api.service.IUserService
 import org.springframework.stereotype.Service
+import java.util.*
 
 /**
  * Created by Victor Santos on 16/12/2019
@@ -50,7 +51,7 @@ class SpentServiceImpl(
         return SpentSumResponseDTO(spentSum, balance, cpf)
     }
 
-    override fun getById(id: Long): SpentResponseDTO {
+    override fun getById(id: String): SpentResponseDTO {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
@@ -60,7 +61,7 @@ class SpentServiceImpl(
         return SpentResponseDTO.toDto(spent.get())
     }
 
-    override fun deleteById(id: Long) {
+    override fun deleteById(id: String) {
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {

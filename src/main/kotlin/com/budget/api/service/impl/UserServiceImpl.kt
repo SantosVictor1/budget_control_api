@@ -13,6 +13,7 @@ import com.budget.api.model.User
 import com.budget.api.repository.UserRepository
 import com.budget.api.service.IUserService
 import org.springframework.stereotype.Service
+import java.util.*
 
 /**
  * Created by Victor Santos on 25/11/2019
@@ -57,7 +58,7 @@ class UserServiceImpl(
         return userResponseDTOList
     }
 
-    override fun getById(id: Long): UserResponseDTO {
+    override fun getById(id: String): UserResponseDTO {
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {

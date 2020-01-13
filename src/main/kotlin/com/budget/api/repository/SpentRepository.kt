@@ -5,12 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.*
 
 /**
  * Created by Victor Santos on 16/12/2019
  */
 @Repository
-interface SpentRepository : JpaRepository<Spent, Long> {
+interface SpentRepository : JpaRepository<Spent, String> {
     /**
      * Method that find all the spending with the specified user's cpf
      *

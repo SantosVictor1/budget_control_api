@@ -8,7 +8,7 @@ import java.util.*
  * Created by Victor Santos on 16/12/2019
  */
 class SpentResponseDTO(
-    val id: Long,
+    val id: String,
     val spentValue: Double,
     @JsonFormat(pattern = "dd/MM/yyyy")
     val spentDate: Date,

@@ -12,7 +12,7 @@
     <artifactId>budget</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>budget</name>
-    <description>Simple CRUD project for financial control</description>
+    <description>Project made for budget control</description>
 
     <properties>
         <java.version>1.8</java.version>

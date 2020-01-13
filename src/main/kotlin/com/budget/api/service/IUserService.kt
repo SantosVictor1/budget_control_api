@@ -6,6 +6,7 @@ import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.SuccessResponseDTO
 import com.budget.api.dto.response.success.UserIncomeResponseDTO
 import com.budget.api.dto.response.success.UserResponseDTO
+import java.util.*
 
 /**
  * Created by Victor Santos on 24/12/2019
@@ -51,7 +52,7 @@ interface IUserService {
      * @param  id  Id used in the search
      * @return A DTO with user's data without password
      */
-    fun getById(id: Long): UserResponseDTO
+    fun getById(id: String): UserResponseDTO
 
     /**
      * Method that get the user by its cpf

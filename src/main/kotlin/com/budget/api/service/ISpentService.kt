@@ -3,6 +3,7 @@ package com.budget.api.service
 import com.budget.api.dto.request.SpentRequestDTO
 import com.budget.api.dto.response.success.SpentResponseDTO
 import com.budget.api.dto.response.success.SpentSumResponseDTO
+import java.util.*
 
 /**
  * Created by Victor Santos on 24/12/2019
@@ -40,12 +41,12 @@ interface ISpentService {
      * @param  id  Id used in search
      * @return  Spent's DTO with the necessary data
      */
-    fun getById(id: Long): SpentResponseDTO
+    fun getById(id: String): SpentResponseDTO
 
     /**
      * Method that deletes a spent by its Id
      *
      * @param  id  Id used in search
      */
-    fun deleteById(id: Long)
+    fun deleteById(id: String)
 }

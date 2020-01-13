@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 /**
@@ -43,7 +44,7 @@ class UserController(
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<UserResponseDTO> {
+    fun getById(@PathVariable id: String): ResponseEntity<UserResponseDTO> {
         return ResponseEntity.ok().body(userService.getById(id))
     }
 

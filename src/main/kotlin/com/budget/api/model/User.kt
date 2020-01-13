@@ -3,6 +3,8 @@ package com.budget.api.model
 import com.budget.api.dto.request.UserRequestDTO
 import com.budget.api.dto.response.success.UserResponseDTO
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.GenericGenerator
+import java.util.*
 import javax.persistence.*
 
 /**
@@ -12,9 +14,10 @@ import javax.persistence.*
 @Table(name = "user")
 class User(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "userId")
-    var id: Long? = null,
+    var id: String? = UUID.randomUUID().toString(),
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -37,7 +40,7 @@ class User(
 ) {
     companion object {
         fun fromUserRequestToEntity(userRequestDTO: UserRequestDTO): User {
-            return User(null, userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income, null)
+            return User(UUID.randomUUID().toString(), userRequestDTO.name, userRequestDTO.cpf, userRequestDTO.email, userRequestDTO.password, userRequestDTO.income, null)
         }
 
         fun fromUserResponseToEntity(userResponseDTO: UserResponseDTO): User {

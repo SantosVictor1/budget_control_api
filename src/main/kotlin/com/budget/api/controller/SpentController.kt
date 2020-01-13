@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 /**
@@ -37,12 +38,12 @@ class SpentController(
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<SpentResponseDTO> {
+    fun getById(@PathVariable id: String): ResponseEntity<SpentResponseDTO> {
         return ResponseEntity.ok().body(spentService.getById(id))
     }
 
     @DeleteMapping("/{id}")
-    fun deleteSpentBydId(@PathVariable id: Long): ResponseEntity<Any> {
+    fun deleteSpentBydId(@PathVariable id: String): ResponseEntity<Any> {
         spentService.deleteById(id)
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()

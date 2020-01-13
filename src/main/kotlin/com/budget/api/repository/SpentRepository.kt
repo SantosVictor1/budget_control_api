@@ -18,7 +18,8 @@ interface SpentRepository : JpaRepository<Spent, String> {
      * @param  cpf  CPF used in search
      * @return A MutableList with all Spending found
      */
-    fun findAllByUserCpf(cpf: String): MutableList<Spent>
+    @Query(value = "SELECT spent FROM Spent spent WHERE spent.user.cpf = :cpf ORDER BY spent.spentDate DESC")
+    fun findAllByUserCpf(@Param(value = "cpf") cpf: String): MutableList<Spent>
 
 
     /**
@@ -28,6 +29,6 @@ interface SpentRepository : JpaRepository<Spent, String> {
      * @param  cpf CPF used in search
      * @return The sum
      */
-    @Query("SELECT SUM(spent.spentValue) FROM Spent spent WHERE spent.user.cpf = :cpf")
+    @Query(value = "SELECT SUM(spent.spentValue) FROM Spent spent WHERE spent.user.cpf = :cpf")
     fun sumValueByUserCpf(@Param(value = "cpf") cpf: String): Double
 }

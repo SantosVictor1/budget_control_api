@@ -18,7 +18,7 @@ import javax.validation.Valid
  * Created by Victor Santos on 24/11/2019
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(
     private val userService: IUserService
 ) {

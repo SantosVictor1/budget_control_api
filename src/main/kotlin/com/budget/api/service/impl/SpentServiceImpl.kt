@@ -19,7 +19,7 @@ import java.util.*
 @Service
 class SpentServiceImpl(
     private val spentRepository: SpentRepository,
-    private val userService: IUserService
+    private val userService: UserServiceImpl
 ) : ISpentService {
     private lateinit var spentResponseDTOList: MutableList<SpentResponseDTO>
 

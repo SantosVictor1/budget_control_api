@@ -40,7 +40,7 @@ class UserServiceImpl(
     }
 
     override fun updateUserIncome(incomeRequestDTO: IncomeRequestDTO): UserIncomeResponseDTO {
-        var user: User = User.fromUserResponseToEntity(getByCpf(incomeRequestDTO.cpf))
+        var user: User = findByCpf(incomeRequestDTO.cpf)
 
         user.income = incomeRequestDTO.income
 
@@ -69,19 +69,25 @@ class UserServiceImpl(
     }
 
     override fun getByCpf(cpf: String): UserResponseDTO {
-        val user = userRepository.findByCpf(cpf)
+        val user = findByCpf(cpf)
 
-        if (user == null) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", User::class.simpleName!!)
-        }
-
-        return UserResponseDTO.toDto(user!!)
+        return UserResponseDTO.toDto(user)
     }
 
     override fun deleteByCpf(cpf: String) {
         val user = User.fromUserResponseToEntity(getByCpf(cpf))
 
         userRepository.deleteById(user.id!!)
+    }
+
+    fun findByCpf(cpf: String): User {
+        val user = userRepository.findByCpf(cpf)
+
+        if (user == null) {
+            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", User::class.simpleName!!)
+        }
+
+        return user!!
     }
 
     /**

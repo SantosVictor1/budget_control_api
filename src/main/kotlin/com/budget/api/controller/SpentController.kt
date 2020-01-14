@@ -19,7 +19,7 @@ import javax.validation.Valid
  * Created by Victor Santos on 16/12/2019
  */
 @RestController
-@RequestMapping("/api/spending")
+@RequestMapping("/spending")
 class SpentController(
     private val spentService: ISpentService
 ) {

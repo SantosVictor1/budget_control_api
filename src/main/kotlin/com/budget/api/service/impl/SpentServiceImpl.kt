@@ -55,7 +55,7 @@ class SpentServiceImpl(
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.canonicalName)
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent::class.simpleName!!)
         }
 
         return SpentResponseDTO.toDto(spent.get())
@@ -65,7 +65,7 @@ class SpentServiceImpl(
         val spent = spentRepository.findById(id)
 
         if (!spent.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent.javaClass.canonicalName)
+            resourceNotFoundException(BudgetErrorCode.BUDGET101.code, "id", Spent::class.simpleName!!)
         }
 
         spentRepository.deleteById(id)

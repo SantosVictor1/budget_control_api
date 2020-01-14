@@ -62,7 +62,7 @@ class UserServiceImpl(
         val user = userRepository.findById(id)
 
         if (!user.isPresent) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "id", User.javaClass.canonicalName)
+            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "id", User::class.simpleName!!)
         }
 
         return UserResponseDTO.toDto(user.get())
@@ -72,7 +72,7 @@ class UserServiceImpl(
         val user = userRepository.findByCpf(cpf)
 
         if (user == null) {
-            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", User.javaClass.canonicalName)
+            resourceNotFoundException(BudgetErrorCode.BUDGET013.code, "cpf", User::class.simpleName!!)
         }
 
         return UserResponseDTO.toDto(user!!)

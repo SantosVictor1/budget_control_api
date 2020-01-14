@@ -30,9 +30,9 @@ class SpentServiceImpl(
         return SpentResponseDTO.toDto(spentRepository.save(spent))
     }
 
-    override fun getByUserCpf(cpf: String): MutableList<SpentResponseDTO> {
+    override fun getByUserCpf(cpf: String, initialDate: Date, finalDate: Date): MutableList<SpentResponseDTO> {
         findUserByCpf(cpf)
-        val spentByUserList: List<Spent> = spentRepository.findAllByUserCpf(cpf)
+        val spentByUserList: List<Spent> = spentRepository.findAllByUserCpf(cpf, initialDate, finalDate)
 
         spentResponseDTOList = mutableListOf()
 
@@ -43,10 +43,10 @@ class SpentServiceImpl(
         return spentResponseDTOList
     }
 
-    override fun getSpentSumByUserCpf(cpf: String): SpentSumResponseDTO {
+    override fun getSpentSumByUserCpf(cpf: String, initialDate: Date, finalDate: Date): SpentSumResponseDTO {
         val user = findUserByCpf(cpf)
-        val spentSum = spentRepository.sumValueByUserCpf(cpf)
-        val balance = user.income - spentSum
+        val spentSum = spentRepository.sumValueByUserCpf(cpf, initialDate, finalDate)
+        val balance = user.income - spentSum!!
 
         return SpentSumResponseDTO(spentSum, balance, cpf)
     }

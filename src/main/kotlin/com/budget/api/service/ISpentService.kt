@@ -24,7 +24,7 @@ interface ISpentService {
      * @param  cpf  CPF used in search
      * @return  SpentResponseDTO MutableList with all spending found
      */
-    fun getByUserCpf(cpf: String): MutableList<SpentResponseDTO>
+    fun getByUserCpf(cpf: String, initialDate: Date, finalDate: Date): MutableList<SpentResponseDTO>
 
     /**
      * Method that gets the sum of all spending's value filtered by
@@ -33,7 +33,7 @@ interface ISpentService {
      * @param  cpf  CPF used in search
      * @return  SpentSumResponseDTO with the sum and the balance
      */
-    fun getSpentSumByUserCpf(cpf: String): SpentSumResponseDTO
+    fun getSpentSumByUserCpf(cpf: String, initialDate: Date, finalDate: Date): SpentSumResponseDTO
 
     /**
      * Method that gets a spent by its Id

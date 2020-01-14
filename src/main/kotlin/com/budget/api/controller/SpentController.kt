@@ -8,6 +8,7 @@ import com.budget.api.service.ISpentService
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -28,13 +29,21 @@ class SpentController(
     }
 
     @GetMapping("/user")
-    fun getAllFromUserCpf(@RequestParam cpf: String): ResponseEntity<MutableList<SpentResponseDTO>> {
-        return ResponseEntity.ok().body(spentService.getByUserCpf(cpf))
+    fun getAllFromUserCpf(
+        @RequestParam cpf: String,
+        @RequestParam initialDate: Date,
+        @RequestParam finalDate: Date
+    ): ResponseEntity<MutableList<SpentResponseDTO>> {
+        return ResponseEntity.ok().body(spentService.getByUserCpf(cpf, initialDate, finalDate))
     }
 
     @GetMapping("/sum")
-    fun getFinalSumByUserCpf(@RequestParam cpf: String): ResponseEntity<SpentSumResponseDTO> {
-        return ResponseEntity.ok(spentService.getSpentSumByUserCpf(cpf))
+    fun getFinalSumByUserCpf(
+        @RequestParam cpf: String,
+        @RequestParam initialDate: Date,
+        @RequestParam finalDate: Date
+        ): ResponseEntity<SpentSumResponseDTO> {
+        return ResponseEntity.ok(spentService.getSpentSumByUserCpf(cpf, initialDate, finalDate))
     }
 
     @GetMapping("/{id}")

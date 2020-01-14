@@ -14,21 +14,30 @@ import java.util.*
 interface SpentRepository : JpaRepository<Spent, String> {
     /**
      * Method that find all the spending with the specified user's cpf
+     * within a time interval
      *
      * @param  cpf  CPF used in search
      * @return A MutableList with all Spending found
      */
-    @Query(value = "SELECT spent FROM Spent spent WHERE spent.user.cpf = :cpf ORDER BY spent.spentDate DESC")
-    fun findAllByUserCpf(@Param(value = "cpf") cpf: String): MutableList<Spent>
+    @Query(value = "SELECT spent FROM Spent spent WHERE spent.user.cpf = :cpf AND spent.spentDate BETWEEN :initialDate AND :finalDate ORDER BY spent.spentDate DESC")
+    fun findAllByUserCpf(
+        @Param(value = "cpf") cpf: String,
+        @Param(value ="initialDate") initialDate: Date,
+        @Param(value ="finalDate") finalDate: Date
+    ): MutableList<Spent>
 
 
     /**
-     * Method that returns the sum of all spending's value filtered by
-     * user's cpf
+     * Method that returns the sum of all spending's value within a time
+     * interval filtered by user's cpf
      *
      * @param  cpf CPF used in search
      * @return The sum
      */
-    @Query(value = "SELECT SUM(spent.spentValue) FROM Spent spent WHERE spent.user.cpf = :cpf")
-    fun sumValueByUserCpf(@Param(value = "cpf") cpf: String): Double
+    @Query(value = "SELECT SUM(spent.spentValue) FROM Spent spent WHERE spent.user.cpf = :cpf AND spent.spentDate BETWEEN :initialDate AND :finalDate")
+    fun sumValueByUserCpf(
+        @Param(value = "cpf") cpf: String,
+        @Param(value ="initialDate") initialDate: Date,
+        @Param(value ="finalDate") finalDate: Date
+    ): Double?
 }

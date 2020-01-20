@@ -3,15 +3,10 @@ package com.budget.api.common
 /**
  * Created by Victor Santos on 11/01/2020
  */
-class BudgetErrorCode {
-    private val key: String
+class BudgetErrorCode(
+    val key: String,
     val code: String
-
-    private constructor(key: String, code: String) {
-        this.key = key
-        this.code = code
-    }
-
+) {
     companion object {
         //User Errors BUDGET001 to BUDGET100
         val BUDGET001: BudgetErrorCode = BudgetErrorCode("BUDGET-001", "required.name")

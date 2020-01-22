@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  budget_db:
+    container_name: budget_db_prod
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: 'budget_db_prod'
+      MYSQL_USER: 'budget_db_prod'
+      MYSQL_PASSWORD: 'budget_db_prod'
+      MYSQL_ROOT_PASSWORD: 'budget_db_prod'
+      SPRING_PROFILES_ACTIVE: 'prod'
+    ports:
+    - '3306:3306'
+    expose:
+      - '3306'

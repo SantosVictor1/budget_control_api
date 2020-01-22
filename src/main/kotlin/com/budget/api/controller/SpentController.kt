@@ -31,8 +31,8 @@ class SpentController(
     @GetMapping("/user")
     fun getAllFromUserCpf(
         @RequestParam cpf: String,
-        @RequestParam initialDate: Date,
-        @RequestParam finalDate: Date
+        @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") initialDate: Date,
+        @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") finalDate: Date
     ): ResponseEntity<MutableList<SpentResponseDTO>> {
         return ResponseEntity.ok().body(spentService.getByUserCpf(cpf, initialDate, finalDate))
     }
@@ -40,8 +40,8 @@ class SpentController(
     @GetMapping("/sum")
     fun getFinalSumByUserCpf(
         @RequestParam cpf: String,
-        @RequestParam initialDate: Date,
-        @RequestParam finalDate: Date
+        @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") initialDate: Date,
+        @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy") finalDate: Date
         ): ResponseEntity<SpentSumResponseDTO> {
         return ResponseEntity.ok(spentService.getSpentSumByUserCpf(cpf, initialDate, finalDate))
     }

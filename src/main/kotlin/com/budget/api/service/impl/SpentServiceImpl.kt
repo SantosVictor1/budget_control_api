@@ -45,8 +45,9 @@ class SpentServiceImpl(
 
     override fun getSpentSumByUserCpf(cpf: String, initialDate: Date, finalDate: Date): SpentSumResponseDTO {
         val user = findUserByCpf(cpf)
-        val spentSum = spentRepository.sumValueByUserCpf(cpf, initialDate, finalDate)
-        val balance = user.income - spentSum!!
+        var spentSum = spentRepository.sumValueByUserCpf(cpf, initialDate, finalDate)
+        spentSum = spentSum ?: 0.0
+        val balance = user.income - spentSum
 
         return SpentSumResponseDTO(spentSum, balance, cpf)
     }
